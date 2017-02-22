@@ -84,8 +84,6 @@ public void setup() {
    // Calculate the width of the rects depending on how many bands we have
    r_width = width/float(bands);
 
-   
-
    //Load and play a soundfile and loop it. This has to be called 
    // before the FFT is created.
    sample = new SoundFile(this, "beat.aiff");
@@ -126,15 +124,33 @@ public void drawUI() {
 
 private void drawVisualizationArrows()
 {
-    fill(0, 255, 100);
+    
     stroke(0, 200, 50);
     
+   
+   
+    
     //Previous visualization
+   if (overRect(prevVisualizationX, prevVisualizationY, arrowWidth, largeButtonHeight))
+   {
+     fill(0, 255, 100);
+   }
+   else {
+     fill(0, 200, 50);
+   }
     triangle(prevVisualizationX, prevVisualizationY+(largeButtonHeight/2), //X1, Y1 
              arrowWidth, prevVisualizationY,                   //X2, Y2
              arrowWidth, largeButtonHeight+prevVisualizationY);//X3, Y3
+   
     
     //Next visualization
+   if (overRect(nextVisualizationX, nextVisualizationY, arrowWidth, largeButtonHeight))
+   {
+     fill(0, 255, 100);
+   }
+    else {
+      fill(0, 200, 50);
+    }
     triangle(nextVisualizationX-5+arrowWidth, nextVisualizationY+(largeButtonHeight/2),//X1, Y1 
              nextVisualizationX, nextVisualizationY,  //X2, Y2
              nextVisualizationX, largeButtonHeight+nextVisualizationY);  //X3, Y3  
@@ -238,7 +254,12 @@ private void drawChords() {
 }
 
 private void drawEnabledButton(int x, int y, int btnWidth, int btnHeight, String btnText){
-  fill(0, 255, 100);
+  if (overRect(x, y, btnWidth, btnHeight))
+  {
+    fill(0, 255, 100);
+  } else {
+    fill(0, 200, 50);
+  }
   stroke(0, 200, 50);
   rect(x, y, btnWidth, btnHeight);
   
@@ -253,7 +274,13 @@ private void drawChordSuggestions() {
 }
 
 private void drawDisabledButton(int x, int y, int btnWidth, int btnHeight, String btnText){
-  fill(255, 0, 100);
+  if (overRect(x, y, btnWidth, btnHeight))
+  {
+    fill(255, 0, 100);
+  } else {
+    fill(200, 0, 50);
+  }
+  
   stroke(200, 0, 25);
   rect(x, y, btnWidth, btnHeight);
   
