@@ -59,13 +59,15 @@ int arrowWidth = (int)(buttonGap * 1.6);
 
 StringList lyricWords;
 
+Animation danceAnimation;
+
 //Enabled buttons
 boolean visualizationEnabled = true;
 boolean lyricEnabled = false;
 boolean chordDisplayEnabled = false;
 boolean chordSuggestionEnabled = false;
 
-enum Visualizations {Ball, Bars};
+enum Visualizations {Ball, Bars, Dancing};
 Visualizations SelectedVisualization;
 
 
@@ -96,7 +98,7 @@ public void setup() {
    lyricWords.append("Sunshine");
    lyricWords.append("Tree");
    
-   
+   danceAnimation = new Animation("dancing", 18);
 }      
 
 public void draw() {
@@ -148,6 +150,25 @@ private void drawButton(boolean isEnabled, int x, int y, int btnWidth, int btnHe
 public void drawVisualization() {
     if (SelectedVisualization == Visualizations.Ball) drawBallVisualization();
     if (SelectedVisualization == Visualizations.Bars) drawBarsVisualization();
+    if (SelectedVisualization == Visualizations.Dancing) drawDanceVisualization();
+}
+
+private void drawDanceVisualization()
+{
+    fft.analyze();
+    sum = 0;
+    int rValue = 0;
+    int gValue = 0;
+    int bValue = 0;
+      for (int i = 0; i < bands; i++) {
+        // smooth the FFT data by smoothing factor
+        sum += fft.spectrum[i];
+        if (i <= (bands/3)) rValue += fft.spectrum[i]*40;
+        if (i > (bands/3) && i < (bands*2/3)) gValue += fft.spectrum[i]*150;
+        if (i >= (bands*2/3)) bValue += fft.spectrum[i]*500;
+      }
+    background(rValue, gValue, bValue);
+   danceAnimation.display((sum > 1), width/2 - (danceAnimation.getWidth()/2), height/2 - (danceAnimation.getHeight()/2)); 
 }
 
 private void drawBallVisualization()
@@ -155,19 +176,28 @@ private void drawBallVisualization()
       // Set background color, noStroke and fill color
       background(0,0,0);
       noStroke();
-      fill(255,0,150);
       
+      int rValue = 50;
+      int gValue = 50;
+      int bValue = 50;
+      sum = 0;
       fft.analyze();
       for (int i = 0; i < bands; i++) {
         // smooth the FFT data by smoothing factor
         sum += fft.spectrum[i];
+        if (i <= (bands/3)) rValue += fft.spectrum[i]*50;
+        if (i > (bands/3) && i < (bands*2/3)) gValue += fft.spectrum[i]*80;
+        if (i >= (bands*2/3)) bValue += fft.spectrum[i]*100;
       }
+      
       //sum = (float)Math.log(sum);
       sum = sum/8;
-      println(sum);
+      //println(sum);
       // rms.analyze() return a value between 0 and 1. It's
       // scaled to height/2 and then multiplied by a scale factor
       float rms_scaled=sum*(height/2)*scale;
+      
+      fill(rValue,gValue,bValue);
   
       // We draw an ellispe coupled to the audio analysis
       ellipse(width/2, height/2, rms_scaled, rms_scaled);
@@ -258,5 +288,38 @@ boolean overRect(int x, int y, int width, int height)  {
     return true;
   } else {
     return false;
+  }
+}
+
+class Animation {
+  PImage[] images;
+  int imageCount;
+  int frame;
+  
+  Animation(String imagePrefix, int count) {
+    imageCount = count;
+    images = new PImage[imageCount];
+
+    for (int i = 0; i < imageCount; i++) {
+      // Use nf() to number format 'i' into four digits
+      String filename = imagePrefix + nf(i, 4) + ".gif";
+      images[i] = loadImage(filename);
+    }
+  }
+
+  void display(boolean shouldIncrement, float xpos, float ypos) {
+    if (shouldIncrement)
+    {
+      frame = (frame+1) % imageCount;
+    }
+    image(images[frame], xpos, ypos);
+  }
+  
+  int getWidth() {
+    return images[0].width;
+  }
+  
+  int getHeight() {
+    return images[0].height;
   }
 }
