@@ -61,6 +61,8 @@ StringList lyricWords;
 
 Animation danceAnimation;
 
+int frameSkipCount = 0;
+
 //Enabled buttons
 boolean visualizationEnabled = true;
 boolean lyricEnabled = false;
@@ -308,9 +310,12 @@ class Animation {
   }
 
   void display(boolean shouldIncrement, float xpos, float ypos) {
-    if (shouldIncrement)
+    if (shouldIncrement || frameSkipCount > 10)
     {
-      frame = (frame+1) % imageCount;
+       frame = (frame+1) % imageCount;
+       frameSkipCount = 0;
+    } else { 
+       frameSkipCount++;
     }
     image(images[frame], xpos, ypos);
   }
