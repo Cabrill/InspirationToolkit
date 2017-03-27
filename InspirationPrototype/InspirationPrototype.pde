@@ -1,46 +1,56 @@
-int maxChosenObjects = 20;
-int maxObjectPerType = 5;
+import g4p_controls.*;
+
+static final int MAX_CHOSEN_OBJECTS = 20;
+PImage backgroundImage;
+PImage areaImage;
+PImage typeBar;
+PImage wordFrame;
 
 ImageList chosenImages;
-
 StringList chosenStrings;
-StringList similarStrings;
-StringList randomStrings;
-StringList oppositeStrings;
+PoemList chosenPoems;
 
-/*
-TODO:  Create a Poem class to hold poem objects
-Poem[] chosenPoems = new Poem[maxChosenObjects];
-Poem[] similarPoems = new Poem[maxObjectPerType];
-Poem[] randomPoems = new Poem[maxObjectPerType];
-Poem[] oppositePoems = new Poem[maxObjectPerType];
-*/
+//UI coordinates
+float largeAreaHeight;
+float largeAreaY;
+float areaGap;
 
-int buttonGap = 20;
+float collectionAreaX;
+float collectionAreaY;
+float collectionAreaWidth;
+float collectionAreaHeight;
 
-//Button dimensions
-int largeButtonWidth = 150;
-int largeButtonHeight = 50;
-int smallButtonWidth = 100;
-int smallButtonHeight = 50;
+float collectedWordAreaX;
+float collectedWordAreaY;
+float collectedWordAreaWidth;
+float collectedWordAreaHeight;
 
-int visualizationButtonX = buttonGap*2;
-int visualizationButtonY = buttonGap;
+float collectedWordTitleX;
+float collectedWordTitleY;
+float collectedWordTitleWidth;
+float collectedWordTitleHeight;
 
-int lyricButtonX = (buttonGap * 4) + largeButtonWidth;
-int lyricButtonY = visualizationButtonY;
+float wordAreaX;
+float wordAreaY;
+float wordAreaWidth;
+float wordAreaHeight;
 
-int chordDisplayButtonX = (buttonGap * 5) + (largeButtonWidth * 2);
-int chordDisplayButtonY = lyricButtonY;
+float wordTitleBarX;
+float wordTitleBarY;
+float wordTitleBarWidth;
+float wordTitleBarHeight; 
 
-int chordSuggestionButtonX = (buttonGap * 6) + (largeButtonWidth * 3);
-int chordSuggestionButtonY = chordDisplayButtonY;
+float collectionTitleBarX;
+float collectionTitleBarY;
+float collectionTitleBarWidth;
+float collectionTitleBarHeight;
 
-int prevVisualizationX = 5;
-int prevVisualizationY = buttonGap;
+float imageTitleBarX;
+float imageTitleBarY;
+float imageTitleBarWidth;
+float imageTitleBarHeight;
 
-int nextVisualizationX = visualizationButtonX + largeButtonWidth + 5;
-int nextVisualizationY = buttonGap;
+float imageAppearY;
 
 //Temporary hard-codedkeywords
 String similarKeyword = "Happy";
@@ -50,15 +60,22 @@ String oppositeKeyword = "Sad";
 public enum KeywordType {Similar, Random, Opposite}
 
 Image img;
+float imageHeight;
+int imageFallSpeed = 2;
 
 public void setup() {
-   size(1280,800);
-   InitializeImageLoader();
+   size(1920,1080);
+   setupUICoordinates();
+   backgroundImage = loadImage("blue_sunburst.jpg");
+   areaImage = loadImage("area.png");
+   typeBar = loadImage("type_bar.png");
+   wordFrame = loadImage("word_frame.png");
+   initializeImageLoader();
 }      
 
 public void draw() {
-  background(0,0,0);
-  UpdateImageRetrieval();
+  background(backgroundImage);
+  updateImageRetrieval();
   drawUI();
   
   if (img == null) {
@@ -67,57 +84,78 @@ public void draw() {
       img = similarImages.getRandom();
     }
   } else {
-    image(img.getImg(), 0, 0, width, height);
+    image(img.getImg(), width/2, imageHeight, width*0.2, height*0.2);
+    imageHeight += imageFallSpeed ;
+    if (imageHeight > height)
+    {
+       img = similarImages.getRandom();
+       imageHeight = imageAppearY; 
+    }
   }
-  
-  
+
+  textSize(12);
    text("Similar Image Count:" + (similarImages == null ? 0 : similarImages.size()), width/2, height/2);
    text("Random Image Count:" + (randomImages == null ? 0 : randomImages.size()), width/2, 20 + height/2);
    text("Opposite Image Count:" + (oppositeImages == null ? 0 : oppositeImages.size()), width/2, 40 + height/2);
 }
 
 public void drawUI() {
+  //CollectionArea
+  image(areaImage, collectionAreaX, collectionAreaY, collectionAreaWidth, collectionAreaHeight);
+  
+  //wordArea
+  image(areaImage, wordAreaX, wordAreaY, wordAreaWidth, wordAreaHeight);
+  
+  //wordTitleBar
+  image(typeBar, wordTitleBarX, wordTitleBarY, wordTitleBarWidth, wordTitleBarHeight);
+  
+  //collectionTitleBar
+  image(wordFrame, collectionTitleBarX, collectionTitleBarY, collectionTitleBarWidth, collectionTitleBarHeight);
+  textSize(32);
+  text("Collected Images", collectionTitleBarWidth/3, collectionTitleBarY*5);
 
-
+  //imageTitleBar
+  image(typeBar, imageTitleBarX, imageTitleBarY, imageTitleBarWidth, imageTitleBarHeight);
 }
 
-private void drawButton(boolean isEnabled, int x, int y, int btnWidth, int btnHeight, String btnText){
-  if (isEnabled) {
-    drawEnabledButton(x, y, btnWidth, btnHeight, btnText);
-  }
-  else {
-    drawDisabledButton(x, y, btnWidth, btnHeight, btnText);
-  }
-}
-
-
-private void drawEnabledButton(int x, int y, int btnWidth, int btnHeight, String btnText){
-  if (overRect(x, y, btnWidth, btnHeight))
-  {
-    fill(0, 255, 100);
-  } else {
-    fill(0, 200, 50);
-  }
-  stroke(0, 200, 50);
-  rect(x, y, btnWidth, btnHeight);
+private void setupUICoordinates()
+{
+  largeAreaHeight = height*0.98;
+  largeAreaY = height*0.01;
+  areaGap = width*0.01;
   
-  fill(0, 0, 0);
-  text(btnText, x+(btnWidth/3), y+(btnHeight/2));
-}
-
-private void drawDisabledButton(int x, int y, int btnWidth, int btnHeight, String btnText){
-  if (overRect(x, y, btnWidth, btnHeight))
-  {
-    fill(255, 0, 100);
-  } else {
-    fill(200, 0, 50);
-  }
+  collectionAreaX = areaGap;
+  collectionAreaY = largeAreaY;
+  collectionAreaWidth = width/3;
+  collectionAreaHeight = largeAreaHeight;
   
-  stroke(200, 0, 25);
-  rect(x, y, btnWidth, btnHeight);
+  wordAreaX = width*0.73;
+  wordAreaY = largeAreaY;
+  wordAreaWidth = width - wordAreaX;
+  wordAreaHeight = largeAreaHeight;
   
-  fill(255, 255, 255);
-  text(btnText, x+(btnWidth/3), y+(btnHeight/2));
+  wordTitleBarX = wordAreaX;
+  wordTitleBarY = largeAreaY;
+  wordTitleBarWidth = wordAreaWidth;
+  wordTitleBarHeight = width /32; 
+  
+  collectionTitleBarX = collectionAreaX;
+  collectionTitleBarY = collectionAreaY;
+  collectionTitleBarWidth = collectionAreaWidth;
+  collectionTitleBarHeight = collectionAreaHeight / 16;
+  
+  collectedWordTitleX = collectionAreaX;
+  collectedWordTitleY = collectionAreaY / 2 + (collectionTitleBarHeight);
+  collectedWordTitleWidth = collectionTitleBarWidth;
+  collectedWordTitleHeight = collectionTitleBarHeight;
+    
+  imageTitleBarX = collectionAreaX + collectionAreaWidth;
+  imageTitleBarY = largeAreaY;
+  imageTitleBarWidth = wordAreaX - (collectionAreaX + collectionAreaWidth);
+  imageTitleBarHeight = collectionTitleBarHeight; 
+  
+  imageAppearY = imageTitleBarY + imageTitleBarHeight;
+  imageHeight = imageAppearY;
 }
 
 void mousePressed() {
