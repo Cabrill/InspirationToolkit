@@ -14,6 +14,11 @@ float collectionAreaY;
 float collectionAreaWidth;
 float collectionAreaHeight;
 
+float collectedImageTitleX;
+float collectedImageTitleY;
+float collectedImageTitleWidth;
+float collectedImageTitleHeight;
+
 float collectedWordAreaX;
 float collectedWordAreaY;
 float collectedWordAreaWidth;
@@ -34,65 +39,12 @@ float wordTitleBarY;
 float wordTitleBarWidth;
 float wordTitleBarHeight; 
 
-float collectedImageTitleX;
-float collectedImageTitleY;
-float collectedImageTitleWidth;
-float collectedImageTitleHeight;
-
 float imageTitleBarX;
 float imageTitleBarY;
 float imageTitleBarWidth;
 float imageTitleBarHeight;
 
 float imageAppearY;
-
-private void setupUICoordinates()
-{
-  backgroundImage = loadImage("blue_sunburst.jpg");
-  areaImage = loadImage("area.png");
-  typeBar = loadImage("type_bar.png");
-  wordFrame = loadImage("word_frame.png");
-  
-  largeAreaHeight = height*0.98;
-  largeAreaY = height*0.01;
-  areaGap = width*0.01;
-  
-  collectionAreaX = areaGap;
-  collectionAreaY = largeAreaY;
-  collectionAreaWidth = width/3;
-  collectionAreaHeight = largeAreaHeight;
-  
-  wordAreaX = width*0.73;
-  wordAreaY = largeAreaY;
-  wordAreaWidth = width - wordAreaX;
-  wordAreaHeight = largeAreaHeight;
-  
-  wordTitleBarX = wordAreaX;
-  wordTitleBarY = largeAreaY;
-  wordTitleBarWidth = wordAreaWidth;
-  wordTitleBarHeight = width /32; 
-  
-  collectedImageTitleX = collectionAreaX;
-  collectedImageTitleY = collectionAreaY;
-  collectedImageTitleWidth = collectionAreaWidth;
-  collectedImageTitleHeight = collectionAreaHeight / 16;
-  
-  collectedWordTitleX = collectionAreaX;
-  collectedWordTitleY = collectionAreaHeight / 2 + (collectedImageTitleHeight);
-  collectedWordTitleWidth = collectedImageTitleWidth;
-  collectedWordTitleHeight = collectedImageTitleHeight;
-    
-  imageTitleBarX = collectionAreaX + collectionAreaWidth;
-  imageTitleBarY = largeAreaY;
-  imageTitleBarWidth = wordAreaX - (collectionAreaX + collectionAreaWidth);
-  imageTitleBarHeight = collectedImageTitleHeight; 
-  
-  imageAppearY = imageTitleBarY + imageTitleBarHeight;
-  imageHeight = imageAppearY;
-}
-
-public void drawUI() {
-=======
 float imageSimilarAppearX;
 float imageRandomAppearX;
 float imageOppositeAppearX;
@@ -175,10 +127,10 @@ private void setupUICoordinates()
    wordTitleBarWidth = wordAreaWidth;
    wordTitleBarHeight = width /32; 
   
-   collectionTitleBarX = collectionAreaX;
-   collectionTitleBarY = collectionAreaY;
-   collectionTitleBarWidth = collectionAreaWidth;
-   collectionTitleBarHeight = collectionAreaHeight / 16;
+   collectedImageTitleBarX = collectionAreaX;
+   collectedImageTitleBarY = collectionAreaY;
+   collectedImageTitleBarWidth = collectionAreaWidth;
+   collectedImageTitleBarHeight = collectionAreaHeight / 16;
   
    collectedWordTitleX = collectionAreaX;
    collectedWordTitleY = collectionAreaY / 2 + (collectionTitleBarHeight);

@@ -52,7 +52,7 @@ void updateImageLocations()
     {
       img = imgSource.getRandom();
       OnScreenImage osi = new OnScreenImage(img, imageAppearX, imageAppearY);
-      onScreenImages.add();
+      onScreenImages.add(osi);
     }
   } else {
     image(img.getImg(), width/2, imageHeight, width*0.2, height*0.2);
