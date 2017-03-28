@@ -2,9 +2,13 @@ static final int MAX_CHOSEN_OBJECTS = 20;
 
 public enum KeywordType {Similar, Random, Opposite}
 
+KeywordType chooseCurrentType;
+
 ImageList chosenImages;
 StringList chosenStrings;
 PoemList chosenPoems;
+
+ArrayList<OnScreenImage> onScreenImages = new ArrayList<OnScreenImage>();
 
 //Temporary hard-coded keywords
 String similarKeyword = "Happy";
@@ -16,25 +20,35 @@ float imageHeight;
 int imageFallSpeed = 2;
 
 public void setup() {
-   size(displayWidth, displayHeight);
-   initializeGUI();
-   initializeImageLoader();
+  chooseCurrentType = KeywordType.Similar;
+  size(displayWidth, displayHeight);
+  initializeGUI();
+  initializeImageLoader();
 }      
 
 public void draw() {
-  
   updateImageRetrieval();
   drawUI();
   updateImageLocations();
-
 }
 
 void updateImageLocations()
 {
   if (img == null) {
-    if (similarImages != null)
+    ImageList imgSource = null;
+    float imageAppearX = 0;
+    switch (currentKeyword)
     {
-      img = similarImages.getRandom();
+       case Similar: imgSource = similarImages; imageAppearX = imageSimilarAppearX; break;
+       case Random: imgSource = randomImages; imageAppearX = imageRandomAppearX; break;
+       case Opposite: imgSource = oppositeImages; imageAppearX = imageOppositeAppearX; break;
+       
+    }
+    if (imgSource != null && imgSource.size() > 0)
+    {
+      img = imgSource.getRandom();
+      OnScreenImage osi = new OnScreenImage(img, imageAppearX, imageAppearY);
+      onScreenImages.add();
     }
   } else {
     image(img.getImg(), width/2, imageHeight, width*0.2, height*0.2);
@@ -58,4 +72,9 @@ boolean overRect(int x, int y, int width, int height)  {
   } else {
     return false;
   }
+}
+
+private KeywordType nextKeywordType()
+{
+  return KeywordType.values()[(currentKeyword.ordinal() + 1) % 3];
 }

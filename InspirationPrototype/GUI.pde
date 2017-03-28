@@ -45,6 +45,9 @@ float imageTitleBarWidth;
 float imageTitleBarHeight;
 
 float imageAppearY;
+float imageSimilarAppearX;
+float imageRandomAppearX;
+float imageOppositeAppearX;
 
 public void initializeGUI()
 {
@@ -87,40 +90,43 @@ public void drawUI() {
 
 private void setupUICoordinates()
 {
-  largeAreaHeight = height*0.98;
-  largeAreaY = height*0.01;
-  areaGap = width*0.01;
+   largeAreaHeight = height*0.98;
+   largeAreaY = height*0.01;
+   areaGap = width*0.01;
   
-  collectionAreaX = areaGap;
-  collectionAreaY = largeAreaY;
-  collectionAreaWidth = width/3;
-  collectionAreaHeight = largeAreaHeight;
+   collectionAreaX = areaGap;
+   collectionAreaY = largeAreaY;
+   collectionAreaWidth = width/3;
+   collectionAreaHeight = largeAreaHeight;
   
-  wordAreaX = width*0.73;
-  wordAreaY = largeAreaY;
-  wordAreaWidth = width - wordAreaX;
-  wordAreaHeight = largeAreaHeight;
+   wordAreaX = width*0.73;
+   wordAreaY = largeAreaY;
+   wordAreaWidth = width - wordAreaX;
+   wordAreaHeight = largeAreaHeight;
   
-  wordTitleBarX = wordAreaX;
-  wordTitleBarY = largeAreaY;
-  wordTitleBarWidth = wordAreaWidth;
-  wordTitleBarHeight = width /32; 
+   wordTitleBarX = wordAreaX;
+   wordTitleBarY = largeAreaY;
+   wordTitleBarWidth = wordAreaWidth;
+   wordTitleBarHeight = width /32; 
   
-  collectionTitleBarX = collectionAreaX;
-  collectionTitleBarY = collectionAreaY;
-  collectionTitleBarWidth = collectionAreaWidth;
-  collectionTitleBarHeight = collectionAreaHeight / 16;
+   collectionTitleBarX = collectionAreaX;
+   collectionTitleBarY = collectionAreaY;
+   collectionTitleBarWidth = collectionAreaWidth;
+   collectionTitleBarHeight = collectionAreaHeight / 16;
   
-  collectedWordTitleX = collectionAreaX;
-  collectedWordTitleY = collectionAreaY / 2 + (collectionTitleBarHeight);
-  collectedWordTitleWidth = collectionTitleBarWidth;
-  collectedWordTitleHeight = collectionTitleBarHeight;
+   collectedWordTitleX = collectionAreaX;
+   collectedWordTitleY = collectionAreaY / 2 + (collectionTitleBarHeight);
+   collectedWordTitleWidth = collectionTitleBarWidth;
+   collectedWordTitleHeight = collectionTitleBarHeight;
     
-  imageTitleBarX = collectionAreaX + collectionAreaWidth;
-  imageTitleBarY = largeAreaY;
-  imageTitleBarWidth = wordAreaX - (collectionAreaX + collectionAreaWidth);
-  imageTitleBarHeight = collectionTitleBarHeight; 
+   imageTitleBarX = collectionAreaX + collectionAreaWidth;
+   imageTitleBarY = largeAreaY;
+   imageTitleBarWidth = wordAreaX - (collectionAreaX + collectionAreaWidth);
+   imageTitleBarHeight = collectionTitleBarHeight; 
   
-  imageAppearY = imageTitleBarY + imageTitleBarHeight;
-  imageHeight = imageAppearY;
+   imageAppearY = imageTitleBarY + imageTitleBarHeight;
+   imageHeight = imageAppearY;
+   imageSimilarAppearX = imageTitleBarX;
+   imageRandomAppearX = imageTitleBarX * 1.33;
+   imageOppositeAppearX = imageTitleBarX * 1.66;
 }

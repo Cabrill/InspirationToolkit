@@ -1,4 +1,45 @@
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Random;
+
+class OnScreenImage {
+  private float imageX;
+  private float imageY;
+  private Image image;
+  
+  public OnScreenImage(Image img, float x, float y)
+  {
+    image = img;
+    imageX = x;
+    imageY = y;
+  }
+  
+  public float getX()
+  {
+    return imageX;
+  }
+  
+  public float getY()
+  {
+    return imageY;
+  }
+  
+  public Image getImage()
+  {
+    return image;
+  }
+  
+  public void setX(float x)
+  {
+    imageX = x;
+  }
+  
+  public void setY(float y)
+  {
+    imageY = y;
+  }
+}
 
 class Poem {
   private String poemId;
@@ -35,16 +76,6 @@ class Poem {
   }
 }
 
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
-
-/**
- * The ImageList holds all loaded images.
- * 
- * @author Mathias Markl
- */
 public class PoemList {
 
     private ConcurrentHashMap<String, Poem> poems;
