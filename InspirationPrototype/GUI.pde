@@ -127,20 +127,20 @@ private void setupUICoordinates()
    wordTitleBarWidth = wordAreaWidth;
    wordTitleBarHeight = width /32; 
   
-   collectedImageTitleBarX = collectionAreaX;
-   collectedImageTitleBarY = collectionAreaY;
-   collectedImageTitleBarWidth = collectionAreaWidth;
-   collectedImageTitleBarHeight = collectionAreaHeight / 16;
+   collectedImageTitleX = collectionAreaX;
+   collectedImageTitleY = collectionAreaY;
+   collectedImageTitleWidth = collectionAreaWidth;
+   collectedImageTitleHeight = collectionAreaHeight / 16;
   
    collectedWordTitleX = collectionAreaX;
-   collectedWordTitleY = collectionAreaY / 2 + (collectionTitleBarHeight);
-   collectedWordTitleWidth = collectionTitleBarWidth;
-   collectedWordTitleHeight = collectionTitleBarHeight;
+   collectedWordTitleY = collectionAreaHeight / 2 + (collectedImageTitleHeight);
+   collectedWordTitleWidth = collectedImageTitleWidth;
+   collectedWordTitleHeight = collectedImageTitleHeight;
     
    imageTitleBarX = collectionAreaX + collectionAreaWidth;
    imageTitleBarY = largeAreaY;
    imageTitleBarWidth = wordAreaX - (collectionAreaX + collectionAreaWidth);
-   imageTitleBarHeight = collectionTitleBarHeight; 
+   imageTitleBarHeight = collectedImageTitleHeight; 
   
    imageAppearY = imageTitleBarY + imageTitleBarHeight;
    imageHeight = imageAppearY;

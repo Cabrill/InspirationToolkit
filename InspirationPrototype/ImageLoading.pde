@@ -80,7 +80,6 @@ private void stopLoading()
   loader.stop();
 }
 
-
 private ImageList retrieveImages(String keyword)
 {
   isRetrieving = true;
