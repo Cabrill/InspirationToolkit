@@ -80,10 +80,6 @@ private void stopLoading()
   loader.stop();
 }
 
-private KeywordType nextKeywordType()
-{
-  return KeywordType.values()[(currentKeyword.ordinal() + 1) % 3];
-}
 
 private ImageList retrieveImages(String keyword)
 {
