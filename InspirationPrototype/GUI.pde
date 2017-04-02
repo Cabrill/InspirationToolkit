@@ -170,8 +170,8 @@ private void setupUICoordinates()
   collectedWordTitleWidth = wordAreaWidth;
   collectedWordTitleHeight = wordAreaHeight / 16;
    
-  collectedWordAreaX = collectedWordTitleX;
-  collectedWordAreaY = collectedWordTitleY + collectedWordTitleHeight;
+  collectedWordAreaX = collectedWordTitleX * 1.01;
+  collectedWordAreaY = (collectedWordTitleY + collectedWordTitleHeight) * 1.05;
   collectedWordAreaWidth = collectedWordTitleWidth;
   collectedWordAreaHeight = height - collectedWordAreaY;
    

@@ -48,10 +48,10 @@ void mousePressed() {
 
 void drawCollectedWords()
 {
-  int rowGap = 20;
-  int colGap = 40;
-  float startX = collectedWordAreaX * 1.01;
-  float startY = (collectedWordAreaY + collectedWordTitleHeight) * 1.01;
+  int rowGap = 25;
+  int colGap = 50;
+  float startX = collectedWordAreaX;
+  float startY = collectedWordAreaY;
   float wordX = startX;
   float wordY = startY;
   

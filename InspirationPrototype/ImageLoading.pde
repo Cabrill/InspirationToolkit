@@ -185,7 +185,10 @@ public void chooseAnyClickedImage(ArrayList<OnScreenImage> imageList)
 private void addImageToCollection(OnScreenImage osi)
 {
   collectedImages.addImage(osi.getImage());
-  collectedWords.append(osi.getImage().getImgInfo());
+  String keyword = osi.getSourceKeyword();
+  if (!collectedWords.hasValue(keyword)){
+    collectedWords.append(osi.getSourceKeyword());
+  }
 }
 
 public OnScreenImage getAnyHoveredImage(ArrayList<OnScreenImage> imageList)
