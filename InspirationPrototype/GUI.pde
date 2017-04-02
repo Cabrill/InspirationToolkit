@@ -9,10 +9,15 @@ float largeAreaHeight;
 float largeAreaY;
 float areaGap;
 
-float collectionAreaX;
-float collectionAreaY;
-float collectionAreaWidth;
-float collectionAreaHeight;
+float poemAreaX;
+float poemAreaY;
+float poemAreaWidth;
+float poemAreaHeight;
+
+float collectedImageAreaX;
+float collectedImageAreaY;
+float collectedImageAreaWidth;
+float collectedImageAreaHeight;
 
 float collectedImageTitleX;
 float collectedImageTitleY;
@@ -38,6 +43,11 @@ float wordTitleBarX;
 float wordTitleBarY;
 float wordTitleBarWidth;
 float wordTitleBarHeight; 
+
+float poemTitleBarX;
+float poemTitleBarY;
+float poemTitleBarWidth;
+float poemTitleBarHeight;
 
 float imageTitleBarX;
 float imageTitleBarY;
@@ -70,11 +80,14 @@ public void drawUI() {
   //Background
   image(backgroundImage, 0, 0, displayWidth, displayHeight);
   
-  //CollectionArea
-  image(areaImage, collectionAreaX, collectionAreaY, collectionAreaWidth, collectionAreaHeight);
+  //poemArea
+  image(areaImage, poemAreaX, poemAreaY, poemAreaWidth, poemAreaHeight);
   
   //wordArea
   image(areaImage, wordAreaX, wordAreaY, wordAreaWidth, wordAreaHeight);
+  
+  //imageArea
+  image(areaImage, collectedImageAreaX, collectedImageAreaY, collectedImageAreaWidth, collectedImageAreaHeight);
   
   //wordTitleBar
   image(typeBar, wordTitleBarX, wordTitleBarY, wordTitleBarWidth, wordTitleBarHeight);
@@ -82,14 +95,18 @@ public void drawUI() {
   //imageTitleBar
   image(typeBar, imageTitleBarX, imageTitleBarY, imageTitleBarWidth, imageTitleBarHeight);
   
-  textSize(32);
+   textSize(32);
+  //poemTitleBar
+  image(wordFrame, poemTitleBarX, poemTitleBarY, poemTitleBarWidth, poemTitleBarHeight);
+  text("Poem", poemTitleBarX + poemTitleBarWidth/4, poemTitleBarY + poemTitleBarHeight * 0.75);
+  
   //collectedImageTitle
   image(wordFrame, collectedImageTitleX, collectedImageTitleY, collectedImageTitleWidth, collectedImageTitleHeight);
-  text("Collected Images", collectedImageTitleWidth/3, collectedImageTitleY*5);
+  text("Collected Images", collectedImageTitleX + collectedImageTitleWidth/4, collectedImageTitleY + collectedImageTitleHeight * 0.75);
   
   //collectednWordTitle
   image(wordFrame, collectedWordTitleX, collectedWordTitleY, collectedWordTitleWidth, collectedWordTitleHeight);
-  text("Collected Words", collectedWordTitleWidth/3, collectedWordTitleY + (collectedWordTitleHeight*0.7));
+  text("Collected Words", collectedWordTitleX + (collectedWordTitleWidth/6), collectedWordTitleY + (collectedWordTitleHeight*0.75));
 
    
    if (debugEnabled)
@@ -112,35 +129,45 @@ private void setupUICoordinates()
    largeAreaY = height*0.01;
    areaGap = width*0.01;
   
-   collectionAreaX = areaGap;
-   collectionAreaY = largeAreaY;
-   collectionAreaWidth = width/3;
-   collectionAreaHeight = largeAreaHeight;
-  
+   poemAreaX = areaGap;
+   poemAreaY = largeAreaY;
+   poemAreaWidth = width/3;
+   poemAreaHeight = largeAreaHeight;
+   
    wordAreaX = width*0.73;
    wordAreaY = largeAreaY;
    wordAreaWidth = width - wordAreaX;
    wordAreaHeight = largeAreaHeight;
-  
+   
    wordTitleBarX = wordAreaX;
    wordTitleBarY = largeAreaY;
    wordTitleBarWidth = wordAreaWidth;
    wordTitleBarHeight = width /32; 
-  
-   collectedImageTitleX = collectionAreaX;
-   collectedImageTitleY = collectionAreaY;
-   collectedImageTitleWidth = collectionAreaWidth;
-   collectedImageTitleHeight = collectionAreaHeight / 16;
-  
-   collectedWordTitleX = collectionAreaX;
-   collectedWordTitleY = collectionAreaHeight / 2 + (collectedImageTitleHeight);
-   collectedWordTitleWidth = collectedImageTitleWidth;
-   collectedWordTitleHeight = collectedImageTitleHeight;
     
-   imageTitleBarX = collectionAreaX + collectionAreaWidth;
+   imageTitleBarX = poemAreaX + poemAreaWidth;
    imageTitleBarY = largeAreaY;
-   imageTitleBarWidth = wordAreaX - (collectionAreaX + collectionAreaWidth);
-   imageTitleBarHeight = collectedImageTitleHeight; 
+   imageTitleBarWidth = wordAreaX - (poemAreaX + poemAreaWidth);
+   imageTitleBarHeight = wordTitleBarHeight; 
+   
+   poemTitleBarX = poemAreaX;
+   poemTitleBarY = largeAreaY;
+   poemTitleBarWidth = poemAreaWidth;
+   poemTitleBarHeight = width /32; 
+   
+   collectedWordTitleX = wordAreaX;
+   collectedWordTitleY = (wordAreaHeight / 2) + wordTitleBarHeight + largeAreaY;
+   collectedWordTitleWidth = wordAreaWidth;
+   collectedWordTitleHeight = wordAreaHeight / 16;
+   
+   collectedImageAreaX = poemAreaX + poemAreaWidth + areaGap;
+   collectedImageAreaY = collectedWordTitleY;
+   collectedImageAreaWidth = width - poemAreaWidth - wordAreaWidth - (3 * areaGap);
+   collectedImageAreaHeight = height -  collectedImageAreaY;
+   
+   collectedImageTitleX = imageTitleBarX;
+   collectedImageTitleY = collectedWordTitleY;
+   collectedImageTitleWidth = collectedImageAreaWidth;
+   collectedImageTitleHeight = collectedWordTitleHeight;
   
    imageAppearY = imageTitleBarY + imageTitleBarHeight;
    imageHeight = imageAppearY;

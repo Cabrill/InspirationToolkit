@@ -24,8 +24,9 @@ float imageHeight;
 int imageFallSpeed = 2;
 
 public void setup() {
+  fullScreen();
   chooseCurrentType = KeywordType.Similar;
-  size(displayWidth, displayHeight);
+  //size(displayWidth, displayHeight);
   initializeGUI();
   initializeImageLoader();
 }      
