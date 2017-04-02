@@ -3,7 +3,7 @@ static final int MAX_CHOSEN_OBJECTS = 20;
 
 Boolean debugEnabled = true;
 
-public enum KeywordType {Similar, Random, Opposite}
+public enum KeywordType {Similar, Opposite, Random}
 
 KeywordType chooseCurrentType;
 
@@ -12,16 +12,18 @@ ImageList chosenImages;
 StringList chosenStrings;
 PoemList chosenPoems;
 
-ArrayList<OnScreenImage> onScreenImages = new ArrayList<OnScreenImage>();
+KeywordType currentUpdatingKeyword = KeywordType.Similar;
+
+ArrayList<OnScreenImage> onScreenSimilarImages = new ArrayList<OnScreenImage>();
+ArrayList<OnScreenImage> onScreenRandomImages = new ArrayList<OnScreenImage>();
+ArrayList<OnScreenImage> onScreenOppositeImages = new ArrayList<OnScreenImage>();
 
 //Temporary hard-codedkeywords
 String similarKeyword = "Happy";
 String randomKeyword = "Random";
 String oppositeKeyword = "Sad";
 
-Image img;
-float imageHeight;
-int imageFallSpeed = 2;
+int imageFallSpeed = 4;
 
 public void setup() {
   fullScreen();
@@ -33,41 +35,56 @@ public void setup() {
 
 public void draw() {
   updateImageRetrieval();
+
   drawUI();
-  updateImageLocations();
+    updateImageLocations();
 }
 
 void updateImageLocations()
 {
-  if (img == null) {
     ImageList imgSource = null;
     float imageAppearX = 0;
-    switch (currentKeyword)
+    float earliestAppearY = 0;
+    ArrayList<OnScreenImage>  OSI = null;
+    
+    float topSimilarY = getTopImageY(onScreenSimilarImages);
+    float topRandomY = getTopImageY(onScreenRandomImages);
+    float topOppositeY = getTopImageY(onScreenOppositeImages);
+    switch (currentUpdatingKeyword)
     {
-       case Similar: imgSource = similarImages; imageAppearX = imageSimilarAppearX; break;
-       case Random: imgSource = randomImages; imageAppearX = imageRandomAppearX; break;
-       case Opposite: imgSource = oppositeImages; imageAppearX = imageOppositeAppearX; break;
+       case Similar: imgSource = similarImages; imageAppearX = imageSimilarAppearX; OSI = onScreenSimilarImages;
+       earliestAppearY = Math.min(topSimilarY, topRandomY);
+       break;
+       case Random: imgSource = randomImages; imageAppearX = imageRandomAppearX; OSI = onScreenRandomImages; 
+       earliestAppearY = Math.min(Math.min(topSimilarY, topRandomY), topOppositeY);
+       break;
+       case Opposite: imgSource = oppositeImages; imageAppearX = imageOppositeAppearX; OSI = onScreenOppositeImages; 
+       earliestAppearY = Math.min(topOppositeY, topRandomY);
+       break;
        
     }
-    if (imgSource != null && imgSource.size() > 0)
+    if (imgSource != null && imgSource.size() > 0 && earliestAppearY > (imageHeight+imageAppearY))
     {
-      img = imgSource.getRandom();
+      Image img = imgSource.getRandom();
       OnScreenImage osi = new OnScreenImage(img, imageAppearX, imageAppearY);
-      onScreenImages.add(osi);
+      OSI.add(osi);
+      currentUpdatingKeyword = nextKeywordType(currentUpdatingKeyword);
     }
-  } else {
-    image(img.getImg(), width/2, imageHeight, width*0.2, height*0.2);
-    imageHeight += imageFallSpeed ;
-    if (imageHeight > height)
-    {
-       img = similarImages.getRandom();
-       imageHeight = imageAppearY; 
-    }
-  }
+    incrementAllY(onScreenSimilarImages, imageFallSpeed);
+    incrementAllY(onScreenRandomImages, imageFallSpeed);
+    incrementAllY(onScreenOppositeImages, imageFallSpeed);
+    
+    removeOffScreenImages(onScreenSimilarImages, imageDisappearY);
+    removeOffScreenImages(onScreenRandomImages, imageDisappearY);
+    removeOffScreenImages(onScreenOppositeImages, imageDisappearY);
+    
+    drawImages(onScreenSimilarImages);
+    drawImages(onScreenRandomImages);
+    drawImages(onScreenOppositeImages);
 }
 
 void mousePressed() {
-  img = randomImages.getRandom();
+  //img = randomImages.getRandom();
 }
 
 boolean overRect(int x, int y, int width, int height)  {
@@ -79,7 +96,7 @@ boolean overRect(int x, int y, int width, int height)  {
   }
 }
 
-private KeywordType nextKeywordType()
+private KeywordType nextKeywordType(KeywordType kt)
 {
-  return KeywordType.values()[(currentKeyword.ordinal() + 1) % 3];
+  return KeywordType.values()[(kt.ordinal() + 1) % 3];
 }

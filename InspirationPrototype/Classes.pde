@@ -128,7 +128,7 @@ public class PoemList {
           outputPoem = poem;
         }
   
-        if (img.getTimestamp() > outputPoem.getTimestamp()) {
+        if (poem.getTimestamp() > outputPoem.getTimestamp()) {
           outputPoem = poem;
         }
       }

@@ -14,7 +14,7 @@ String apiSecret = "c5f08b40712e9b20";
 
 int timeOutSeconds = 60;
 
-KeywordType currentKeyword = KeywordType.Similar;
+KeywordType currentRetrievingKeyword = KeywordType.Similar;
 Boolean isRetrieving;
 Boolean isRefreshing = true;
 
@@ -36,7 +36,7 @@ public void updateImageRetrieval()
   {
 
       ImageList retrievalList = null;
-      switch (currentKeyword)
+      switch (currentRetrievingKeyword)
       {
         case Similar: retrievalList = similarImages;break;
         case Random: retrievalList = randomImages; break;
@@ -46,16 +46,16 @@ public void updateImageRetrieval()
      if (retrievalList != null && retrievalList.size() >= 1)
      {
          stopLoading();
-         currentKeyword = nextKeywordType();
+         currentRetrievingKeyword = nextKeywordType(currentRetrievingKeyword);
          
          //If we completed all three (Similar/Random/Opposite) and are back to Similar, then stop refreshing for now.
-         isRefreshing = (currentKeyword == KeywordType.Similar ? false : true); 
+         isRefreshing = (currentRetrievingKeyword == KeywordType.Similar ? false : true); 
      }
   }
     
   if (isRefreshing && !isRetrieving)
   {
-    switch (currentKeyword)
+    switch (currentRetrievingKeyword)
     {
       case Similar:
         similarImages = retrieveImages(similarKeyword); break;
@@ -71,7 +71,7 @@ public void notifyImagesThatKeywordsChanged()
 {
     isRefreshing = true;
     isRetrieving = false;
-    currentKeyword = KeywordType.Similar;
+    currentRetrievingKeyword = KeywordType.Similar;
 }
 
 private void stopLoading()
@@ -84,4 +84,65 @@ private ImageList retrieveImages(String keyword)
 {
   isRetrieving = true;
   return loader.start(keyword, false, timeOutSeconds * 1000);
+}
+
+public float getTopImageY(ArrayList<OnScreenImage> imageList)
+{
+  float topY = 9999;
+  float imageY;
+  for (int i = 0; i < imageList.size(); i++)
+  {
+    imageY = imageList.get(i).getY();
+    if (imageY < topY) topY = imageY;
+  }
+  return topY;
+}
+
+public void incrementAllY(ArrayList<OnScreenImage> imageList, float yIncrement)
+{
+  float currentY;
+  for (int i = 0; i < imageList.size(); i++)
+  {
+    currentY = imageList.get(i).getY();
+    imageList.get(i).setY(currentY + yIncrement);
+  }
+}
+
+public void removeOffScreenImages(ArrayList<OnScreenImage> imageList, float yRemoval)
+{
+  float currentY;
+  for (int i = imageList.size(); i > 0; i--)
+  {
+    currentY = imageList.get(i-1).getY();
+    if (currentY > yRemoval)
+    {
+      imageList.remove(imageList.get(i-1));
+    }
+  }
+}
+
+public void drawImages(ArrayList<OnScreenImage> imageList)
+{
+  OnScreenImage osi;
+  PImage img;
+  float imgX;
+  float imgY;
+  float imgWidth;
+  float imgHeight = imageHeight;
+  float actualHeight;
+  float actualX;
+  
+  for (int i = 0; i < imageList.size(); i++)
+  {
+    osi = imageList.get(i);
+    img = osi.getImage().getImg();
+    imgX = osi.getX();
+    imgY = osi.getY();
+
+    actualHeight = Math.min(imgHeight, (imageDisappearY - imgY));
+    imgWidth = actualHeight;
+    actualX = imgX + (imgHeight - imgWidth)/2;
+    
+    image(img, actualX, imgY, imgWidth, actualHeight);
+  }
 }

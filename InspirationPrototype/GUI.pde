@@ -55,6 +55,9 @@ float imageTitleBarWidth;
 float imageTitleBarHeight;
 
 float imageAppearY;
+float imageDisappearY;
+float imageHeight;
+float imageWidth;
 float imageSimilarAppearX;
 float imageRandomAppearX;
 float imageOppositeAppearX;
@@ -170,8 +173,10 @@ private void setupUICoordinates()
    collectedImageTitleHeight = collectedWordTitleHeight;
   
    imageAppearY = imageTitleBarY + imageTitleBarHeight;
-   imageHeight = imageAppearY;
-   imageSimilarAppearX = imageTitleBarX;
-   imageRandomAppearX = imageTitleBarX * 1.33;
-   imageOppositeAppearX = imageTitleBarX * 1.66;
+   imageDisappearY = collectedImageAreaY;
+   imageHeight = collectedImageAreaWidth / 3;
+   imageWidth = imageHeight;
+   imageSimilarAppearX = imageTitleBarX + areaGap;
+   imageRandomAppearX = imageTitleBarX * 1.4;
+   imageOppositeAppearX = imageTitleBarX * 1.75;
 }
