@@ -7,9 +7,8 @@ public enum KeywordType {Similar, Opposite, Random}
 
 KeywordType chooseCurrentType;
 
-
-ImageList chosenImages;
-StringList chosenStrings;
+ImageList chosenImages = new ImageList();
+StringList chosenWords = new StringList();
 PoemList chosenPoems;
 
 KeywordType currentUpdatingKeyword = KeywordType.Similar;
@@ -31,13 +30,14 @@ public void setup() {
   //size(displayWidth, displayHeight);
   initializeGUI();
   initializeImageLoader();
+  drawChosenWords();
 }      
 
 public void draw() {
   updateImageRetrieval();
-
   drawUI();
-    updateImageLocations();
+  updateImageLocations();
+  drawChosenWords();
 }
 
 void updateImageLocations()
@@ -84,10 +84,36 @@ void updateImageLocations()
 }
 
 void mousePressed() {
-  //img = randomImages.getRandom();
+  chooseAnyClickedImage(onScreenSimilarImages);
+  chooseAnyClickedImage(onScreenRandomImages);
+  chooseAnyClickedImage(onScreenOppositeImages);
 }
 
-boolean overRect(int x, int y, int width, int height)  {
+
+
+void drawChosenWords()
+{
+  int rowGap = 20;
+  int colGap = 40;
+  float startX = collectedWordAreaX * 1.01;
+  float startY = (collectedWordAreaY + collectedWordTitleHeight) * 1.01;
+  float wordX = startX;
+  float wordY = startY;
+  
+  textSize(24);
+  for (int i = 0; i < chosenWords.size(); i++)
+  {
+    text(chosenWords.get(i), wordX, wordY);
+    wordY += rowGap;
+    if (wordY >= (collectedWordAreaY + collectedWordAreaHeight)-rowGap)
+    {
+       wordY = startY;
+       wordX += colGap;
+    }
+  }
+}
+
+boolean overRect(float x, float y, float width, float height)  {
   if (mouseX >= x && mouseX <= x+width && 
       mouseY >= y && mouseY <= y+height) {
     return true;

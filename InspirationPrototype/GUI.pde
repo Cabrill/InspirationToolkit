@@ -162,6 +162,11 @@ private void setupUICoordinates()
    collectedWordTitleWidth = wordAreaWidth;
    collectedWordTitleHeight = wordAreaHeight / 16;
    
+   collectedWordAreaX = collectedWordTitleX;
+   collectedWordAreaY = collectedWordTitleY + collectedWordTitleHeight;
+   collectedWordAreaWidth = collectedWordTitleWidth;
+   collectedWordAreaHeight = height - collectedWordAreaY;
+   
    collectedImageAreaX = poemAreaX + poemAreaWidth + areaGap;
    collectedImageAreaY = collectedWordTitleY;
    collectedImageAreaWidth = width - poemAreaWidth - wordAreaWidth - (3 * areaGap);
@@ -174,9 +179,9 @@ private void setupUICoordinates()
   
    imageAppearY = imageTitleBarY + imageTitleBarHeight;
    imageDisappearY = collectedImageAreaY;
-   imageHeight = collectedImageAreaWidth / 3;
+   imageHeight = collectedImageAreaWidth *0.4;
    imageWidth = imageHeight;
    imageSimilarAppearX = imageTitleBarX + areaGap;
    imageRandomAppearX = imageTitleBarX * 1.4;
-   imageOppositeAppearX = imageTitleBarX * 1.75;
+   imageOppositeAppearX = imageTitleBarX * 1.65;
 }

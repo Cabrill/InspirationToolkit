@@ -6,6 +6,9 @@ import java.util.Random;
 class OnScreenImage {
   private float imageX;
   private float imageY;
+  private float imageHeight;
+  private float imageWidth;
+  private float effectiveX;
   private Image image;
   
   public OnScreenImage(Image img, float x, float y)
@@ -25,11 +28,26 @@ class OnScreenImage {
     return imageY;
   }
   
+  public float getWidth()
+  {
+    return imageWidth;
+  }
+  
+  public float getHeight()
+  {
+    return imageHeight;
+  }
+  
+  public float getEffectiveX()
+  {
+    return effectiveX;
+  }
+  
   public Image getImage()
   {
     return image;
   }
-  
+
   public void setX(float x)
   {
     imageX = x;
@@ -38,6 +56,21 @@ class OnScreenImage {
   public void setY(float y)
   {
     imageY = y;
+  }
+  
+  public void setWidth(float w)
+  {
+    imageWidth = w;
+  }
+  
+  public void setHeight(float h)
+  {
+    imageHeight = h;
+  }
+    
+  public void setEffectiveX(float ex)
+  {
+    effectiveX = ex;
   }
 }
 

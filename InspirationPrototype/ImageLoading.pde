@@ -143,6 +143,31 @@ public void drawImages(ArrayList<OnScreenImage> imageList)
     imgWidth = actualHeight;
     actualX = imgX + (imgHeight - imgWidth)/2;
     
+    osi.setHeight(actualHeight);
+    osi.setWidth(imgWidth);
+    osi.setEffectiveX(actualX);
+    
     image(img, actualX, imgY, imgWidth, actualHeight);
   }
+}
+
+public void chooseAnyClickedImage(ArrayList<OnScreenImage> imageList)
+{
+  OnScreenImage osi;
+  
+  for (int i = imageList.size(); i > 0; i--)
+  {
+      osi = imageList.get(i-1);
+      if (overRect(osi.getEffectiveX(), osi.getY(), osi.getWidth(), osi.getHeight()))
+      {
+        addImageToCollection(osi);
+        imageList.remove(osi);
+      }
+  }
+}
+
+void addImageToCollection(OnScreenImage osi)
+{
+  chosenImages.addImage(osi.getImage());
+  chosenWords.append(osi.getImage().getImgInfo());
 }
