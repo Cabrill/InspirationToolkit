@@ -172,20 +172,20 @@ public void chooseAnyClickedImage(ArrayList<OnScreenImage> imageList)
   {
     for (int i = imageList.size(); i > 0; i--)
     {
-        osi = imageList.get(i-1);
-        if (overRect(osi.getEffectiveX(), osi.getY(), osi.getWidth(), osi.getHeight()))
-        {
-          addImageToCollection(osi);
-          imageList.remove(osi);
-        }
+      osi = imageList.get(i-1);
+      if (overRect(osi.getEffectiveX(), osi.getY(), osi.getWidth(), osi.getHeight()))
+      {
+        addImageToCollection(osi);
+        imageList.remove(osi);
+      }
     }
   }
 }
 
 private void addImageToCollection(OnScreenImage osi)
 {
-  chosenImages.addImage(osi.getImage());
-  chosenWords.append(osi.getImage().getImgInfo());
+  collectedImages.addImage(osi.getImage());
+  collectedWords.append(osi.getImage().getImgInfo());
 }
 
 public OnScreenImage getAnyHoveredImage(ArrayList<OnScreenImage> imageList)
@@ -208,4 +208,128 @@ public OnScreenImage getAnyHoveredImage(ArrayList<OnScreenImage> imageList)
       }
   }
   return null;
+}
+
+public boolean anyImageIsZoomed(ArrayList<OnScreenImage> imageList)
+{
+  OnScreenImage osi;
+  
+  for (int i = imageList.size(); i > 0; i--)
+  {
+      osi = imageList.get(i-1);
+      if (osi.getIsZoomed())
+      {
+        return true;
+      }
+  }
+  return false;
+}
+
+void updateImageLocations()
+{
+    ImageList imgSource = null;
+    float imageAppearX = 0;
+    float earliestAppearY = 0;
+    ArrayList<OnScreenImage>  OSI = null;
+    String keyword = null;
+    
+    float topSimilarY = getTopImageY(onScreenSimilarImages);
+    float topRandomY = getTopImageY(onScreenRandomImages);
+    float topOppositeY = getTopImageY(onScreenOppositeImages);
+    switch (currentUpdatingKeyword)
+    {
+       case Similar: imgSource = similarImages; imageAppearX = imageSimilarAppearX; OSI = onScreenSimilarImages;
+       keyword = similarKeyword;
+       earliestAppearY = Math.min(topSimilarY, topRandomY);
+       break;
+       case Random: imgSource = randomImages; imageAppearX = imageRandomAppearX; OSI = onScreenRandomImages; 
+       keyword = randomKeyword;
+       earliestAppearY = Math.min(Math.min(topSimilarY, topRandomY), topOppositeY);
+       break;
+       case Opposite: imgSource = oppositeImages; imageAppearX = imageOppositeAppearX; OSI = onScreenOppositeImages; 
+       keyword = oppositeKeyword;
+       earliestAppearY = Math.min(topOppositeY, topRandomY);
+       break;
+       
+    }
+    if (imgSource != null && imgSource.size() > 0 && earliestAppearY > (imageHeight+imageAppearY))
+    {
+      Image img = imgSource.getRandom();
+      OnScreenImage osi = new OnScreenImage(img, imageAppearX, imageAppearY, keyword);
+      OSI.add(osi);
+      currentUpdatingKeyword = nextKeywordType(currentUpdatingKeyword);
+    }
+    incrementAllY(onScreenSimilarImages, imageFallSpeed);
+    incrementAllY(onScreenRandomImages, imageFallSpeed);
+    incrementAllY(onScreenOppositeImages, imageFallSpeed);
+    
+    removeOffScreenImages(onScreenSimilarImages, imageDisappearY);
+    removeOffScreenImages(onScreenRandomImages, imageDisappearY);
+    removeOffScreenImages(onScreenOppositeImages, imageDisappearY);
+    
+    boolean anyZoomed = drawImages(onScreenSimilarImages);
+    if (!anyZoomed)
+    {
+      anyZoomed = drawImages(onScreenRandomImages);
+    }
+    if (!anyZoomed)
+    {
+      anyZoomed = drawImages(onScreenOppositeImages);
+    }
+    if (anyZoomed)
+    {
+      imageFallSpeed = 0;
+    }
+    else
+    {
+      imageFallSpeed = 4; 
+    }
+}
+
+public void handleMouseClickedForImages()
+{
+  boolean similarZoomed = anyImageIsZoomed(onScreenSimilarImages);
+  boolean randomZoomed = anyImageIsZoomed(onScreenRandomImages);
+  boolean oppositeZoomed = anyImageIsZoomed(onScreenOppositeImages);
+  if (!similarZoomed && !randomZoomed && !oppositeZoomed)
+  {
+    chooseAnyClickedImage(onScreenSimilarImages);
+    chooseAnyClickedImage(onScreenRandomImages);
+    chooseAnyClickedImage(onScreenOppositeImages);
+  }
+  else
+  {
+    if (similarZoomed) chooseAnyClickedImage(onScreenSimilarImages);
+    if (randomZoomed) chooseAnyClickedImage(onScreenRandomImages);
+    if (oppositeZoomed) chooseAnyClickedImage(onScreenOppositeImages);
+  }
+}
+
+public void drawCollectedImages()
+{
+  if (collectedImages.size() > 0)
+  {
+    Image img;
+    float startX = collectedImageAreaX + 5;
+    float startY = collectedImageAreaY + collectedImageTitleHeight + 5;
+    float imageX = startX;
+    float imageY = startY;
+    float rowGap = collectedImageHeight+10;
+    float colGap = 20;
+
+    for (int i = 0; i < collectedImages.size(); i++)
+    {
+      img = collectedImages.getImage(i);
+      image(img.getImg(), imageX, imageY, collectedImageWidth, collectedImageHeight);
+      
+      imageX += colGap;
+      
+      if (imageX > collectedImageAreaX + (collectedImageAreaWidth - collectedImageWidth))
+      {
+        imageX = startX;
+        imageY += rowGap;
+      }
+
+    }
+  }
 }

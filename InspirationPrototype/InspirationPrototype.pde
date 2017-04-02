@@ -7,9 +7,9 @@ public enum KeywordType {Similar, Opposite, Random}
 
 KeywordType chooseCurrentType;
 
-ImageList chosenImages = new ImageList();
-StringList chosenWords = new StringList();
-PoemList chosenPoems;
+ImageList collectedImages = new ImageList();
+StringList collectedWords = new StringList();
+PoemList collectedPoems;
 
 KeywordType currentUpdatingKeyword = KeywordType.Similar;
 
@@ -26,86 +26,27 @@ int imageFallSpeed = 4;
 
 public void setup() {
   fullScreen();
+  pushMatrix();
   chooseCurrentType = KeywordType.Similar;
   //size(displayWidth, displayHeight);
   initializeGUI();
   initializeImageLoader();
-  drawChosenWords();
 }      
 
 public void draw() {
   updateImageRetrieval();
   drawUI();
   updateImageLocations();
-  drawChosenWords();
-}
-
-void updateImageLocations()
-{
-    ImageList imgSource = null;
-    float imageAppearX = 0;
-    float earliestAppearY = 0;
-    ArrayList<OnScreenImage>  OSI = null;
-    
-    float topSimilarY = getTopImageY(onScreenSimilarImages);
-    float topRandomY = getTopImageY(onScreenRandomImages);
-    float topOppositeY = getTopImageY(onScreenOppositeImages);
-    switch (currentUpdatingKeyword)
-    {
-       case Similar: imgSource = similarImages; imageAppearX = imageSimilarAppearX; OSI = onScreenSimilarImages;
-       earliestAppearY = Math.min(topSimilarY, topRandomY);
-       break;
-       case Random: imgSource = randomImages; imageAppearX = imageRandomAppearX; OSI = onScreenRandomImages; 
-       earliestAppearY = Math.min(Math.min(topSimilarY, topRandomY), topOppositeY);
-       break;
-       case Opposite: imgSource = oppositeImages; imageAppearX = imageOppositeAppearX; OSI = onScreenOppositeImages; 
-       earliestAppearY = Math.min(topOppositeY, topRandomY);
-       break;
-       
-    }
-    if (imgSource != null && imgSource.size() > 0 && earliestAppearY > (imageHeight+imageAppearY))
-    {
-      Image img = imgSource.getRandom();
-      OnScreenImage osi = new OnScreenImage(img, imageAppearX, imageAppearY);
-      OSI.add(osi);
-      currentUpdatingKeyword = nextKeywordType(currentUpdatingKeyword);
-    }
-    incrementAllY(onScreenSimilarImages, imageFallSpeed);
-    incrementAllY(onScreenRandomImages, imageFallSpeed);
-    incrementAllY(onScreenOppositeImages, imageFallSpeed);
-    
-    removeOffScreenImages(onScreenSimilarImages, imageDisappearY);
-    removeOffScreenImages(onScreenRandomImages, imageDisappearY);
-    removeOffScreenImages(onScreenOppositeImages, imageDisappearY);
-    
-    boolean anyZoomed = drawImages(onScreenSimilarImages);
-    if (!anyZoomed)
-    {
-      anyZoomed = drawImages(onScreenRandomImages);
-    }
-    if (!anyZoomed)
-    {
-      anyZoomed = drawImages(onScreenOppositeImages);
-    }
-    if (anyZoomed)
-    {
-      imageFallSpeed = 0;
-    }
-    else
-    {
-       imageFallSpeed = 4; 
-    }
+  
+  drawCollectedImages();
+  drawCollectedWords();
 }
 
 void mousePressed() {
-  chooseAnyClickedImage(onScreenSimilarImages);
-  chooseAnyClickedImage(onScreenRandomImages);
-  chooseAnyClickedImage(onScreenOppositeImages);
+  handleMouseClickedForImages();
 }
 
-
-
-void drawChosenWords()
+void drawCollectedWords()
 {
   int rowGap = 20;
   int colGap = 40;
@@ -115,9 +56,9 @@ void drawChosenWords()
   float wordY = startY;
   
   textSize(24);
-  for (int i = 0; i < chosenWords.size(); i++)
+  for (int i = 0; i < collectedWords.size(); i++)
   {
-    text(chosenWords.get(i), wordX, wordY);
+    text(collectedWords.get(i), wordX, wordY);
     wordY += rowGap;
     if (wordY >= (collectedWordAreaY + collectedWordAreaHeight)-rowGap)
     {

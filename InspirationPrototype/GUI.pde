@@ -67,6 +67,9 @@ float zoomedImageY;
 float zoomedImageWidth;
 float zoomedImageHeight;
 
+float collectedImageHeight;
+float collectedImageWidth;
+
 public void initializeGUI()
 {
    setupUICoordinates();
@@ -133,65 +136,68 @@ private void drawDebug()
 
 private void setupUICoordinates()
 {
-   largeAreaHeight = height*0.98;
-   largeAreaY = height*0.01;
-   areaGap = width*0.01;
+  largeAreaHeight = height*0.98;
+  largeAreaY = height*0.01;
+  areaGap = width*0.01;
   
-   poemAreaX = areaGap;
-   poemAreaY = largeAreaY;
-   poemAreaWidth = width/3;
-   poemAreaHeight = largeAreaHeight;
+  poemAreaX = areaGap;
+  poemAreaY = largeAreaY;
+  poemAreaWidth = width/3;
+  poemAreaHeight = largeAreaHeight;
    
-   wordAreaX = width*0.73;
-   wordAreaY = largeAreaY;
-   wordAreaWidth = width - wordAreaX;
-   wordAreaHeight = largeAreaHeight;
+  wordAreaX = width*0.73;
+  wordAreaY = largeAreaY;
+  wordAreaWidth = width - wordAreaX;
+  wordAreaHeight = largeAreaHeight;
    
-   wordTitleBarX = wordAreaX;
-   wordTitleBarY = largeAreaY;
-   wordTitleBarWidth = wordAreaWidth;
-   wordTitleBarHeight = width /32; 
-    
-   imageTitleBarX = poemAreaX + poemAreaWidth;
-   imageTitleBarY = largeAreaY;
-   imageTitleBarWidth = wordAreaX - (poemAreaX + poemAreaWidth);
-   imageTitleBarHeight = wordTitleBarHeight; 
-   
-   poemTitleBarX = poemAreaX;
-   poemTitleBarY = largeAreaY;
-   poemTitleBarWidth = poemAreaWidth;
-   poemTitleBarHeight = width /32; 
-   
-   collectedWordTitleX = wordAreaX;
-   collectedWordTitleY = (wordAreaHeight / 2) + wordTitleBarHeight + largeAreaY;
-   collectedWordTitleWidth = wordAreaWidth;
-   collectedWordTitleHeight = wordAreaHeight / 16;
-   
-   collectedWordAreaX = collectedWordTitleX;
-   collectedWordAreaY = collectedWordTitleY + collectedWordTitleHeight;
-   collectedWordAreaWidth = collectedWordTitleWidth;
-   collectedWordAreaHeight = height - collectedWordAreaY;
-   
-   collectedImageAreaX = poemAreaX + poemAreaWidth + areaGap;
-   collectedImageAreaY = collectedWordTitleY;
-   collectedImageAreaWidth = width - poemAreaWidth - wordAreaWidth - (3 * areaGap);
-   collectedImageAreaHeight = height -  collectedImageAreaY;
-   
-   collectedImageTitleX = imageTitleBarX;
-   collectedImageTitleY = collectedWordTitleY;
-   collectedImageTitleWidth = collectedImageAreaWidth;
-   collectedImageTitleHeight = collectedWordTitleHeight;
+  wordTitleBarX = wordAreaX;
+  wordTitleBarY = largeAreaY;
+  wordTitleBarWidth = wordAreaWidth;
+  wordTitleBarHeight = width /32; 
   
-   imageAppearY = imageTitleBarY + imageTitleBarHeight;
-   imageDisappearY = collectedImageAreaY;
-   imageHeight = collectedImageAreaWidth *0.4;
-   imageWidth = imageHeight;
-   imageSimilarAppearX = imageTitleBarX + areaGap;
-   imageRandomAppearX = imageTitleBarX * 1.4;
-   imageOppositeAppearX = imageTitleBarX * 1.65;
+  imageTitleBarX = poemAreaX + poemAreaWidth;
+  imageTitleBarY = largeAreaY;
+  imageTitleBarWidth = wordAreaX - (poemAreaX + poemAreaWidth);
+  imageTitleBarHeight = wordTitleBarHeight; 
+   
+  poemTitleBarX = poemAreaX;
+  poemTitleBarY = largeAreaY;
+  poemTitleBarWidth = poemAreaWidth;
+  poemTitleBarHeight = width /32; 
+   
+  collectedWordTitleX = wordAreaX;
+  collectedWordTitleY = (wordAreaHeight / 2) + wordTitleBarHeight + largeAreaY;
+  collectedWordTitleWidth = wordAreaWidth;
+  collectedWordTitleHeight = wordAreaHeight / 16;
+   
+  collectedWordAreaX = collectedWordTitleX;
+  collectedWordAreaY = collectedWordTitleY + collectedWordTitleHeight;
+  collectedWordAreaWidth = collectedWordTitleWidth;
+  collectedWordAreaHeight = height - collectedWordAreaY;
+   
+  collectedImageAreaX = poemAreaX + poemAreaWidth + areaGap;
+  collectedImageAreaY = collectedWordTitleY;
+  collectedImageAreaWidth = width - poemAreaWidth - wordAreaWidth - (3 * areaGap);
+  collectedImageAreaHeight = height -  collectedImageAreaY;
+   
+  collectedImageTitleX = imageTitleBarX;
+  collectedImageTitleY = collectedWordTitleY;
+  collectedImageTitleWidth = collectedImageAreaWidth;
+  collectedImageTitleHeight = collectedWordTitleHeight;
+  
+  imageAppearY = imageTitleBarY + imageTitleBarHeight;
+  imageDisappearY = collectedImageAreaY;
+  imageHeight = collectedImageAreaWidth *0.4;
+  imageWidth = imageHeight;
+  imageSimilarAppearX = imageTitleBarX + areaGap;
+  imageRandomAppearX = imageTitleBarX * 1.4;
+  imageOppositeAppearX = imageTitleBarX * 1.65;
    
   zoomedImageX = imageSimilarAppearX;
   zoomedImageY = imageAppearY;
   zoomedImageWidth = collectedImageTitleWidth;
   zoomedImageHeight = collectedImageTitleY - zoomedImageY;
+  
+  collectedImageHeight = collectedImageAreaWidth / 3;
+  collectedImageWidth = collectedImageHeight;
 }

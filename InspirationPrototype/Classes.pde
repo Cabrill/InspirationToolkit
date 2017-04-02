@@ -11,13 +11,15 @@ class OnScreenImage {
   private float effectiveX;
   private Image image;
   private boolean isZoomed;
+  private String sourceKeyword;
   
-  public OnScreenImage(Image img, float x, float y)
+  public OnScreenImage(Image img, float x, float y, String keyword)
   {
     image = img;
     imageX = x;
     imageY = y;
     isZoomed = false;
+    sourceKeyword = keyword;
   }
   
   public float getX()
@@ -48,6 +50,11 @@ class OnScreenImage {
   public boolean getIsZoomed()
   {
    return isZoomed; 
+  }
+  
+  public String getSourceKeyword()
+  {
+   return sourceKeyword; 
   }
   
   public Image getImage()
