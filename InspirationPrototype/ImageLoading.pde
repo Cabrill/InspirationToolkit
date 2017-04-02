@@ -319,10 +319,18 @@ public void drawCollectedImages()
     float imageY = startY;
     float rowGap = collectedImageHeight+10;
     float colGap = 20;
+    
+    float areaCheck;
 
     for (int i = 0; i < collectedImages.size(); i++)
     {
       img = collectedImages.getImage(i);
+      areaCheck = (i == collectedImages.size()-1 ? collectedImageWidth : colGap);
+      if (overRect(imageX, imageY, areaCheck, collectedImageAreaHeight))
+      {
+        image(img.getImg(), startX, startY, collectedImageAreaHeight*.9, collectedImageAreaHeight*.9);
+        break;
+      }
       image(img.getImg(), imageX, imageY, collectedImageWidth, collectedImageHeight);
       
       imageX += colGap;
