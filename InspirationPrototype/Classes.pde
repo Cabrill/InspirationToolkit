@@ -10,12 +10,14 @@ class OnScreenImage {
   private float imageWidth;
   private float effectiveX;
   private Image image;
+  private boolean isZoomed;
   
   public OnScreenImage(Image img, float x, float y)
   {
     image = img;
     imageX = x;
     imageY = y;
+    isZoomed = false;
   }
   
   public float getX()
@@ -41,6 +43,11 @@ class OnScreenImage {
   public float getEffectiveX()
   {
     return effectiveX;
+  }
+  
+  public boolean getIsZoomed()
+  {
+   return isZoomed; 
   }
   
   public Image getImage()
@@ -71,6 +78,11 @@ class OnScreenImage {
   public void setEffectiveX(float ex)
   {
     effectiveX = ex;
+  }
+  
+  public void setIsZoomed(boolean zoomed)
+  {
+    isZoomed = zoomed; 
   }
 }
 

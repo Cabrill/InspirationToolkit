@@ -78,9 +78,23 @@ void updateImageLocations()
     removeOffScreenImages(onScreenRandomImages, imageDisappearY);
     removeOffScreenImages(onScreenOppositeImages, imageDisappearY);
     
-    drawImages(onScreenSimilarImages);
-    drawImages(onScreenRandomImages);
-    drawImages(onScreenOppositeImages);
+    boolean anyZoomed = drawImages(onScreenSimilarImages);
+    if (!anyZoomed)
+    {
+      anyZoomed = drawImages(onScreenRandomImages);
+    }
+    if (!anyZoomed)
+    {
+      anyZoomed = drawImages(onScreenOppositeImages);
+    }
+    if (anyZoomed)
+    {
+      imageFallSpeed = 0;
+    }
+    else
+    {
+       imageFallSpeed = 4; 
+    }
 }
 
 void mousePressed() {

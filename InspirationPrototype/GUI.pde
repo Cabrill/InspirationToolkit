@@ -62,6 +62,11 @@ float imageSimilarAppearX;
 float imageRandomAppearX;
 float imageOppositeAppearX;
 
+float zoomedImageX;
+float zoomedImageY;
+float zoomedImageWidth;
+float zoomedImageHeight;
+
 public void initializeGUI()
 {
    setupUICoordinates();
@@ -184,4 +189,9 @@ private void setupUICoordinates()
    imageSimilarAppearX = imageTitleBarX + areaGap;
    imageRandomAppearX = imageTitleBarX * 1.4;
    imageOppositeAppearX = imageTitleBarX * 1.65;
+   
+  zoomedImageX = imageSimilarAppearX;
+  zoomedImageY = imageAppearY;
+  zoomedImageWidth = collectedImageTitleWidth;
+  zoomedImageHeight = collectedImageTitleY - zoomedImageY;
 }

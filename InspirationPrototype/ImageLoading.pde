@@ -121,53 +121,91 @@ public void removeOffScreenImages(ArrayList<OnScreenImage> imageList, float yRem
   }
 }
 
-public void drawImages(ArrayList<OnScreenImage> imageList)
+public boolean drawImages(ArrayList<OnScreenImage> imageList)
 {
-  OnScreenImage osi;
-  PImage img;
-  float imgX;
-  float imgY;
-  float imgWidth;
-  float imgHeight = imageHeight;
-  float actualHeight;
-  float actualX;
-  
-  for (int i = 0; i < imageList.size(); i++)
+  OnScreenImage osi = getAnyHoveredImage(imageList);
+  if (osi != null)
   {
-    osi = imageList.get(i);
-    img = osi.getImage().getImg();
-    imgX = osi.getX();
-    imgY = osi.getY();
-
-    actualHeight = Math.min(imgHeight, (imageDisappearY - imgY));
-    imgWidth = actualHeight;
-    actualX = imgX + (imgHeight - imgWidth)/2;
+    image(osi.getImage().getImg(), zoomedImageX, zoomedImageY, zoomedImageWidth, zoomedImageHeight);
+    return true;
+  }
+  else 
+  {
+    PImage img;
+    float imgX;
+    float imgY;
+    float imgWidth;
+    float imgHeight = imageHeight;
+    float actualHeight;
+    float actualX;
     
-    osi.setHeight(actualHeight);
-    osi.setWidth(imgWidth);
-    osi.setEffectiveX(actualX);
-    
-    image(img, actualX, imgY, imgWidth, actualHeight);
+    for (int i = 0; i < imageList.size(); i++)
+    {
+      osi = imageList.get(i);
+      img = osi.getImage().getImg();
+      imgX = osi.getX();
+      imgY = osi.getY();
+  
+      actualHeight = Math.min(imgHeight, (imageDisappearY - imgY));
+      imgWidth = actualHeight;
+      actualX = imgX + (imgHeight - imgWidth)/2;
+      
+      osi.setHeight(actualHeight);
+      osi.setWidth(imgWidth);
+      osi.setEffectiveX(actualX);
+      
+      image(img, actualX, imgY, imgWidth, actualHeight);
+    }
+    return false;
   }
 }
 
 public void chooseAnyClickedImage(ArrayList<OnScreenImage> imageList)
+{
+  OnScreenImage osi = getAnyHoveredImage(imageList);
+  if (osi != null)
+  {
+    addImageToCollection(osi);
+    imageList.remove(osi);
+  }
+  else 
+  {
+    for (int i = imageList.size(); i > 0; i--)
+    {
+        osi = imageList.get(i-1);
+        if (overRect(osi.getEffectiveX(), osi.getY(), osi.getWidth(), osi.getHeight()))
+        {
+          addImageToCollection(osi);
+          imageList.remove(osi);
+        }
+    }
+  }
+}
+
+private void addImageToCollection(OnScreenImage osi)
+{
+  chosenImages.addImage(osi.getImage());
+  chosenWords.append(osi.getImage().getImgInfo());
+}
+
+public OnScreenImage getAnyHoveredImage(ArrayList<OnScreenImage> imageList)
 {
   OnScreenImage osi;
   
   for (int i = imageList.size(); i > 0; i--)
   {
       osi = imageList.get(i-1);
+      if (osi.getIsZoomed())
+      {
+        boolean isStillZoomed = overRect(zoomedImageX, zoomedImageY, zoomedImageWidth, zoomedImageHeight);
+        osi.setIsZoomed(isStillZoomed);
+        if (isStillZoomed) return osi;
+      }
       if (overRect(osi.getEffectiveX(), osi.getY(), osi.getWidth(), osi.getHeight()))
       {
-        addImageToCollection(osi);
-        imageList.remove(osi);
+        osi.setIsZoomed(true);
+        return osi;
       }
   }
-}
-
-void addImageToCollection(OnScreenImage osi)
-{
-  chosenImages.addImage(osi.getImage());
-  chosenWords.append(osi.getImage().getImgInfo());
+  return null;
 }
