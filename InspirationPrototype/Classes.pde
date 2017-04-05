@@ -93,6 +93,44 @@ class OnScreenImage {
   }
 }
 
+class OnScreenWord {
+  private float wordX;
+  private float wordY;
+  private String word;
+  
+  public OnScreenWord(String newWord, float x, float y)
+  {
+    word = newWord;
+    wordX = x;
+    wordY = y;
+  }
+  
+  public float getX()
+  {
+    return wordX;
+  }
+  
+  public float getY()
+  {
+    return wordY;
+  }
+  
+  public String getWord()
+  {
+    return word;
+  }
+
+  public void setX(float x)
+  {
+    wordX = x;
+  }
+  
+  public void setY(float y)
+  {
+    wordY = y;
+  }
+}
+
 class Poem {
   private String poemId;
   private String poemText;

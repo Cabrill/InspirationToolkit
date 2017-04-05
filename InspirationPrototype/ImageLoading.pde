@@ -22,6 +22,10 @@ ImageList similarImages;
 ImageList randomImages;
 ImageList oppositeImages;
 
+ArrayList<OnScreenImage> onScreenSimilarImages = new ArrayList<OnScreenImage>();
+ArrayList<OnScreenImage> onScreenRandomImages = new ArrayList<OnScreenImage>();
+ArrayList<OnScreenImage> onScreenOppositeImages = new ArrayList<OnScreenImage>();
+
 ImageLoader loader;
 
 public void initializeImageLoader()
