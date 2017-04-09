@@ -11,6 +11,8 @@ ImageList collectedImages = new ImageList();
 StringList collectedWords = new StringList();
 PoemList collectedPoems;
 
+HashMap<String, float[]> onSreenWords = new HashMap();
+
 KeywordType currentUpdatingKeyword = KeywordType.Similar;
 
 //Temporary hard-codedkeywords
@@ -32,6 +34,11 @@ public void setup() {
 
 public void draw() {
   updateImageRetrieval();
+  if (collectedWords.size() != 0) {
+    updateWordRetrival(collectedWords.get((int)random(collectedWords.size())));
+  } else { 
+    updateWordRetrival(currentUpdatingKeyword.toString());
+  }  
   drawUI();
   updateImageLocations();
   
