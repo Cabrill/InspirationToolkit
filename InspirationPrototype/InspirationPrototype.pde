@@ -33,13 +33,14 @@ public void setup() {
 }      
 
 public void draw() {
-  updateImageRetrieval();
+  
   if (collectedWords.size() != 0) {
-    updateWordRetrival(collectedWords.get((int)random(collectedWords.size())));
+    //updateWordRetrival(collectedWords.get((int)random(collectedWords.size())));
   } else { 
-    updateWordRetrival(currentUpdatingKeyword.toString());
+    //updateWordRetrival(currentUpdatingKeyword.toString());
   }  
   drawUI();
+  updateImageRetrieval();
   updateImageLocations();
   
   drawCollectedImages();
