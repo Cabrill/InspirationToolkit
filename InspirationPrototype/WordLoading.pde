@@ -12,9 +12,14 @@ public static HashMap<String, StringList>  oppositeWords = new HashMap();
 private static final String url = "https://api.datamuse.com/words";
 private static final String randomURL = "http://randomword.setgetgo.com/get.php";
 
-public void updateWordRetrival(String word) {
+public void updateWordRetrival() {
   String random = getRandomWord();
-
+  String word = "BEANS";
+  if (collectedWords.size() != 0) {
+    word = collectedWords.get((int)random(collectedWords.size()));
+  } else { 
+    word = currentUpdatingKeyword.toString();
+  }
   if (!randomWords.hasValue(random)) {
     randomWords.append(random);
   }
