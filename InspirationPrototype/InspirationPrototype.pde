@@ -36,6 +36,7 @@ public void setup() {
   getWordsSimilarTo("Happy");
   GetPoem();
   thread("fetchData");
+  thread("updateWordRetrival");
   time = millis();
 }      
 
