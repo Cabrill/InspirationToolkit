@@ -3,7 +3,9 @@ static final int MAX_CHOSEN_OBJECTS = 20;
 
 Boolean debugEnabled = true;
 
-public enum KeywordType {Similar, Opposite, Random}
+public enum KeywordType {
+  Similar, Opposite, Random
+}
 
 KeywordType chooseCurrentType;
 
@@ -20,6 +22,9 @@ String similarKeyword = "Fire";
 String randomKeyword = "Random";
 String oppositeKeyword = "Ice";
 
+int time;
+int wait = 5000;
+
 int imageFallSpeed = 4;
 
 public void setup() {
@@ -30,21 +35,29 @@ public void setup() {
   initializeImageLoader();
   getWordsSimilarTo("Happy");
   GetPoem();
-  thread("updateWordRetrival");
+  thread("fetchData");
+  time = millis();
 }      
 
 public void draw() {
-  updateImageRetrieval();
-  updateWordRetrival();
+  if (millis() - time >= wait) {
+    fetchData();
+    time = millis();
+  }
   drawUI();
   updateImageLocations();
-  
+
   drawCollectedImages();
   drawCollectedWords();
 }
 
 void mousePressed() {
   handleMouseClickedForImages();
+}
+
+void fetchData() {
+  updateImageRetrieval();
+  updateWordRetrival();
 }
 
 void drawCollectedWords()
@@ -55,7 +68,7 @@ void drawCollectedWords()
   float startY = collectedWordAreaY;
   float wordX = startX;
   float wordY = startY;
-  
+
   textSize(24);
   for (int i = 0; i < collectedWords.size(); i++)
   {
@@ -63,15 +76,15 @@ void drawCollectedWords()
     wordY += rowGap;
     if (wordY >= (collectedWordAreaY + collectedWordAreaHeight)-rowGap)
     {
-       wordY = startY;
-       wordX += colGap;
+      wordY = startY;
+      wordX += colGap;
     }
   }
 }
 
-boolean overRect(float x, float y, float width, float height)  {
+boolean overRect(float x, float y, float width, float height) {
   if (mouseX >= x && mouseX <= x+width && 
-      mouseY >= y && mouseY <= y+height) {
+    mouseY >= y && mouseY <= y+height) {
     return true;
   } else {
     return false;
