@@ -43,11 +43,12 @@ public void setup() {
 public void draw() {
   if (millis() - time >= wait) {
     fetchData();
+    addWordToOnScreenWords();
     time = millis();
   }
   drawUI();
   updateImageLocations();
-
+  updateWordLocations();
   drawCollectedImages();
   drawCollectedWords();
 }

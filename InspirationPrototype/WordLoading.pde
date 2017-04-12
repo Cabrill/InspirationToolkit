@@ -80,4 +80,57 @@ public StringList getOppositeWords(String word)
 }
 
 public void updateWordLocations() {
+
+  for (String word : onSreenWords.keySet()) {
+    text(word, onSreenWords.get(word)[0], onSreenWords.get(word)[1]);
+    onSreenWords.put(word, new float[]{onSreenWords.get(word)[0], onSreenWords.get(word)[1] + 10});
+  }
+}
+
+public void addWordToOnScreenWords() {
+  int random = (int) random(3);
+  switch(random) {
+  case 0: 
+    addRandomWord();
+  case 1: 
+    addSimilarWord();
+  case 2: 
+    addOppositeWord();
+  }
+}
+
+public void addRandomWord() {
+  String word = randomWords.remove((int)random(randomWords.size()));
+  onSreenWords.put(word, new float[]{wordRandomAppearX, wordAppearY});
+}
+
+public void addSimilarWord() {
+  if (similarWords.size() > 0) {
+    ArrayList<String> keys = new ArrayList<String>(similarWords.keySet());
+    String randomKey = keys.get((int)random(keys.size()));
+    StringList words = similarWords.get(randomKey);
+    if (words.size() != 0) {
+      String word = words.remove((int)random(words.size()));
+      similarWords.put(randomKey, words);
+      onSreenWords.put(word, new float[]{wordSimilarAppearX, wordAppearY});
+      if (words.size() == 0) {
+        similarWords.remove(word);
+      }
+    }
+  }
+}
+public void addOppositeWord() {
+  if (oppositeWords.size() > 0) {
+    ArrayList<String> keys = new ArrayList<String>(oppositeWords.keySet());
+    String randomKey = keys.get((int)random(keys.size()));
+    StringList words = oppositeWords.get(randomKey);
+    if (words.size() != 0) {
+      String word = words.remove((int)random(words.size()));
+      oppositeWords.put(randomKey, words);
+      onSreenWords.put(word, new float[]{wordOppositeAppearX, wordAppearY});
+      if (words.size() == 0) {
+        oppositeWords.remove(word);
+      }
+    }
+  }
 }
