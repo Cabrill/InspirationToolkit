@@ -34,19 +34,9 @@ public void setup() {
 }      
 
 public void draw() {
-<<<<<<< HEAD
-  
-  if (collectedWords.size() != 0) {
-    //updateWordRetrival(collectedWords.get((int)random(collectedWords.size())));
-  } else { 
-    //updateWordRetrival(currentUpdatingKeyword.toString());
-  }  
-=======
   updateImageRetrieval();
   updateWordRetrival();
->>>>>>> threaded word fetch
   drawUI();
-  updateImageRetrieval();
   updateImageLocations();
   
   drawCollectedImages();
