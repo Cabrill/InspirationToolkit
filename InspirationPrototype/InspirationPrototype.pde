@@ -61,7 +61,7 @@ void mousePressed() {
        onSreenWords.remove(clicked);
     }
   }
-  //handleMouseClickedForImages();
+  handleMouseClickedForImages();
 }
 
 void fetchData() {
