@@ -14,22 +14,18 @@ private static final String randomURL = "http://randomword.setgetgo.com/get.php"
 
 public void updateWordRetrival() {
   String random = getRandomWord();
-  String word = "BEANS";
   if (collectedWords.size() != 0) {
-    word = collectedWords.get((int)random(collectedWords.size()));
-  } else { 
-    word = currentUpdatingKeyword.toString();
+    for (String collected : collectedWords) {
+      if (!similarWords.containsKey(collected)) {
+        similarWords.put(collected, getWordsSimilarTo(collected));
+      } 
+      if (!oppositeWords.containsKey(collected)) {
+        oppositeWords.put(collected, getOppositeWords(collected));
+      }
+    }
   }
   if (!randomWords.hasValue(random)) {
     randomWords.append(random);
-  }
-
-  if (!similarWords.containsKey(word)) {
-    similarWords.put(word, getWordsSimilarTo(word));
-  }
-
-  if (!oppositeWords.containsKey(word)) {
-    oppositeWords.put(word, getOppositeWords(word));
   }
 }
 
@@ -46,7 +42,6 @@ public StringList getWordsSimilarTo(String word)
     JSONObject json = jsonArray.getJSONObject(i); 
     String currentWord = json.getString("word");
     int score = json.getInt("score");
-    if (score < 30000) break;
     if (!list.hasValue(currentWord)) {
       list.append(currentWord);
     }
