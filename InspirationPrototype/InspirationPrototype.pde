@@ -54,7 +54,14 @@ public void draw() {
 }
 
 void mousePressed() {
-  handleMouseClickedForImages();
+  if (mouseX >= wordSimilarAppearX && mouseY >= wordAppearY && mouseY <= imageDisappearY) {
+    String clicked = getClickedWord(mouseX,mouseY); 
+    if (clicked != null) {
+       collectedWords.append(clicked);
+       onSreenWords.remove(clicked);
+    }
+  }
+  //handleMouseClickedForImages();
 }
 
 void fetchData() {

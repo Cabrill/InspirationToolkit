@@ -197,10 +197,10 @@ private void setupUICoordinates()
   imageRandomAppearX = imageTitleBarX * 1.4;
   imageOppositeAppearX = imageTitleBarX * 1.65;
 
-  wordSimilarAppearX = wordAreaX;
-  wordRandomAppearX = wordAreaX + wordAreaWidth * 0.4;
-  wordOppositeAppearX = wordAreaX + wordAreaWidth * 0.7;
-  wordAppearY = wordTitleBarY + wordTitleBarHeight;
+  wordSimilarAppearX = wordAreaX +5;
+  wordRandomAppearX = wordAreaX + wordAreaWidth * 0.4 +5;
+  wordOppositeAppearX = wordAreaX + wordAreaWidth * 0.7 +5;
+  wordAppearY = wordTitleBarY + wordTitleBarHeight + 20;
 
     zoomedImageX = imageSimilarAppearX;
   zoomedImageY = imageAppearY;

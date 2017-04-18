@@ -80,10 +80,18 @@ public StringList getOppositeWords(String word)
 }
 
 public void updateWordLocations() {
-
+  StringList deletable = new StringList();
   for (String word : onSreenWords.keySet()) {
+    textSize(25);
     text(word, onSreenWords.get(word)[0], onSreenWords.get(word)[1]);
-    onSreenWords.put(word, new float[]{onSreenWords.get(word)[0], onSreenWords.get(word)[1] + 10});
+    if ((onSreenWords.get(word)[1] + 5) > imageDisappearY) {
+      deletable.append(word);
+    } else { 
+      onSreenWords.put(word, new float[]{onSreenWords.get(word)[0], onSreenWords.get(word)[1] + 5});
+    }
+  }
+  for (String del : deletable) {
+    onSreenWords.remove(del);
   }
 }
 
@@ -92,10 +100,13 @@ public void addWordToOnScreenWords() {
   switch(random) {
   case 0: 
     addRandomWord();
+    break;
   case 1: 
     addSimilarWord();
+    break;
   case 2: 
     addOppositeWord();
+    break;
   }
 }
 
@@ -133,4 +144,15 @@ public void addOppositeWord() {
       }
     }
   }
+}
+
+public String getClickedWord(int x, int y) {
+  for (String word : onSreenWords.keySet()) {
+    int wordX = (int)onSreenWords.get(word)[0];
+    int wordY = (int)onSreenWords.get(word)[1];
+    if (wordX <= x && (wordX + textWidth(word)) >= x && (wordY-25) <= y && wordY >= y) {
+      return word;
+    }
+  }
+  return null;
 }
