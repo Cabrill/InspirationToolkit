@@ -34,7 +34,7 @@ public void setup() {
   initializeGUI();
   initializeImageLoader();
   getWordsSimilarTo("Happy");
-  GetPoem();
+  getPoems(similarKeyword, true);
   thread("fetchData");
   thread("updateWordRetrival");
   time = millis();
@@ -51,6 +51,7 @@ public void draw() {
   updateWordLocations();
   drawCollectedImages();
   drawCollectedWords();
+  drawCollectedPoems();
 }
 
 void mousePressed() {
@@ -67,6 +68,7 @@ void mousePressed() {
 void fetchData() {
   updateImageRetrieval();
   updateWordRetrival();
+  updatePoemRetrieval();
 }
 
 void drawCollectedWords()
