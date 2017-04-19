@@ -76,6 +76,8 @@ float zoomedImageHeight;
 float collectedImageHeight;
 float collectedImageWidth;
 
+int debugTimer = 0;
+
 public void initializeGUI()
 {
   setupUICoordinates();
@@ -84,7 +86,7 @@ public void initializeGUI()
   typeBar = loadImage("type_bar.png");
   wordFrame = loadImage("word_frame.png");
   drawFullUI();
-  prerenderedGUI = get(0,0,width,height);
+  prerenderedGUI = get(0, 0, width, height);
 }
 
 public void drawDebugText()
@@ -92,12 +94,16 @@ public void drawDebugText()
   textSize(12);
 
   text("Similar Keyword: " + similarKeyword, width/2, height-100);
-  text("Random Keyword: " + randomKeyword, width/2, height-150);
-  text("Opposite Keyword: " + oppositeKeyword, width/2, height-200);
-    
+  text("Random Keyword: " + randomKeyword, width/2, height-80);
+  text("Opposite Keyword: " + oppositeKeyword, width/2, height-60);
+
   text("Similar Image Count:" + (similarImages == null ? 0 : similarImages.size()), collectedImageTitleX + collectedWordTitleWidth - 150, collectedWordTitleY - 60);
   text("Random Image Count:" + (randomImages == null ? 0 : randomImages.size()), collectedImageTitleX + collectedWordTitleWidth - 150, collectedWordTitleY - 40);
   text("Opposite Image Count:" + (oppositeImages == null ? 0 : oppositeImages.size()), collectedImageTitleX + collectedWordTitleWidth - 150, collectedWordTitleY - 20);
+  if (debugTimer > 0)
+  {
+    text("Debug timer: " + debugTimer, width/2, height-40);
+  }
 }
 
 public void drawUI()

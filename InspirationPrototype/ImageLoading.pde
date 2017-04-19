@@ -28,6 +28,9 @@ ArrayList<OnScreenImage> onScreenOppositeImages = new ArrayList<OnScreenImage>()
 
 ImageLoader loader;
 
+private Image img;
+private PImage pimg;
+
 public void initializeImageLoader()
 {
   loader = new FlickrLoader(this, apiKey, apiSecret);
@@ -38,7 +41,6 @@ public void updateImageRetrieval()
 {
   if (isRefreshing && isRetrieving)
   {
-
       ImageList retrievalList = null;
       switch (currentRetrievingKeyword)
       {
@@ -135,7 +137,6 @@ public boolean drawImages(ArrayList<OnScreenImage> imageList)
   }
   else 
   {
-    PImage img;
     float imgX;
     float imgY;
     float imgWidth;
@@ -146,7 +147,7 @@ public boolean drawImages(ArrayList<OnScreenImage> imageList)
     for (int i = 0; i < imageList.size(); i++)
     {
       osi = imageList.get(i);
-      img = osi.getImage().getImg();
+      pimg = osi.getImage().getImg();
       imgX = osi.getX();
       imgY = osi.getY();
   
@@ -158,7 +159,7 @@ public boolean drawImages(ArrayList<OnScreenImage> imageList)
       osi.setWidth(imgWidth);
       osi.setEffectiveX(actualX);
       
-      image(img, actualX, imgY, imgWidth, actualHeight);
+      image(pimg, actualX, imgY, imgWidth, actualHeight);
     }
     return false;
   }
@@ -257,14 +258,13 @@ void updateImageLocations()
        keyword = oppositeKeyword;
        earliestAppearY = Math.min(topOppositeY, topRandomY);
        break;
-       
     }
+    
+      
     if (imgSource != null && imgSource.size() > 0 && earliestAppearY > (imageHeight+imageAppearY))
     {
-      Image img = imgSource.getRandom();
-      OnScreenImage osi = new OnScreenImage(img, imageAppearX, imageAppearY, keyword);
-      OSI.add(osi);
-      currentUpdatingKeyword = nextKeywordType(currentUpdatingKeyword);
+      OSI.add(new OnScreenImage(imgSource.getRandom(), imageAppearX, imageAppearY, keyword));
+      currentUpdatingKeyword = nextKeywordType(currentUpdatingKeyword); 
     }
     incrementAllY(onScreenSimilarImages, imageFallSpeed);
     incrementAllY(onScreenRandomImages, imageFallSpeed);
@@ -274,6 +274,8 @@ void updateImageLocations()
     removeOffScreenImages(onScreenRandomImages, imageDisappearY);
     removeOffScreenImages(onScreenOppositeImages, imageDisappearY);
     
+
+    int startTime = millis();
     boolean anyZoomed = drawImages(onScreenSimilarImages);
     if (!anyZoomed)
     {
@@ -283,13 +285,18 @@ void updateImageLocations()
     {
       anyZoomed = drawImages(onScreenOppositeImages);
     }
+      if (millis() - startTime > debugTimer)
+      {
+        debugTimer = millis() - startTime;
+      }
+    
     if (anyZoomed)
     {
       imageFallSpeed = 0;
     }
     else
     {
-      imageFallSpeed = 4; 
+      imageFallSpeed = 2; 
     }
 }
 
@@ -316,7 +323,6 @@ public void drawCollectedImages()
 {
   if (collectedImages.size() > 0)
   {
-    Image img;
     float startX = collectedImageAreaX + 5;
     float startY = collectedImageAreaY + collectedImageTitleHeight + 5;
     float imageX = startX;
