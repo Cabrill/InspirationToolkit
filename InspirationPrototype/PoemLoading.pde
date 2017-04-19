@@ -107,4 +107,5 @@ void drawCollectedPoems()
   if (poemY + rowGap > poemAreaHeight) {
     scrollEnabled = true;
   }
+  textAlign(LEFT);
 }

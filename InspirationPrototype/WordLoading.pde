@@ -41,7 +41,6 @@ public StringList getWordsSimilarTo(String word)
   for (int i = 0; i < jsonArray.size(); i++) {
     JSONObject json = jsonArray.getJSONObject(i); 
     String currentWord = json.getString("word");
-    int score = json.getInt("score");
     if (!list.hasValue(currentWord)) {
       list.append(currentWord);
     }
@@ -77,7 +76,6 @@ public StringList getOppositeWords(String word)
 public void updateWordLocations() {
   StringList deletable = new StringList();
   for (String word : onSreenWords.keySet()) {
-    textAlign(LEFT);
     textSize(25);
     text(word, onSreenWords.get(word)[0], onSreenWords.get(word)[1]);
     if ((onSreenWords.get(word)[1] + 5) > imageDisappearY) {
@@ -146,6 +144,11 @@ public String getClickedWord(int x, int y) {
   for (String word : onSreenWords.keySet()) {
     int wordX = (int)onSreenWords.get(word)[0];
     int wordY = (int)onSreenWords.get(word)[1];
+    textSize(25);
+    println("mouse: " + x + " " + y);
+    println("wordX min: " + wordX + " max: " + (wordX + textWidth(word)));
+    println("wordY min: " + (wordY - 25) + " max: " + wordY);
+    println(word);
     if (wordX <= x && (wordX + textWidth(word)) >= x && (wordY-25) <= y && wordY >= y) {
       return word;
     }
