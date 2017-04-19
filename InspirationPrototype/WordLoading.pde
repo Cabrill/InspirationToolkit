@@ -77,6 +77,7 @@ public StringList getOppositeWords(String word)
 public void updateWordLocations() {
   StringList deletable = new StringList();
   for (String word : onSreenWords.keySet()) {
+    textAlign(LEFT);
     textSize(25);
     text(word, onSreenWords.get(word)[0], onSreenWords.get(word)[1]);
     if ((onSreenWords.get(word)[1] + 5) > imageDisappearY) {

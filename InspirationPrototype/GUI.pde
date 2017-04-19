@@ -93,6 +93,7 @@ public void drawDebugText()
 }
 
 public void drawUI() {
+  textAlign(LEFT);
   //Background
   image(backgroundImage, 0, 0, displayWidth, displayHeight);
 
@@ -114,7 +115,7 @@ public void drawUI() {
   textSize(32);
   //poemTitleBar
   image(wordFrame, poemTitleBarX, poemTitleBarY, poemTitleBarWidth, poemTitleBarHeight);
-  text("Poem", poemTitleBarX + poemTitleBarWidth/4, poemTitleBarY + poemTitleBarHeight * 0.75);
+  text("Poem", poemTitleBarX + poemTitleBarWidth*0.4, poemTitleBarY + poemTitleBarHeight * 0.75);
 
   //collectedImageTitle
   image(wordFrame, collectedImageTitleX, collectedImageTitleY, collectedImageTitleWidth, collectedImageTitleHeight);
@@ -202,7 +203,7 @@ private void setupUICoordinates()
   wordOppositeAppearX = wordAreaX + wordAreaWidth * 0.7 +5;
   wordAppearY = wordTitleBarY + wordTitleBarHeight + 20;
 
-    zoomedImageX = imageSimilarAppearX;
+  zoomedImageX = imageSimilarAppearX;
   zoomedImageY = imageAppearY;
   zoomedImageWidth = collectedImageTitleWidth;
   zoomedImageHeight = collectedImageTitleY - zoomedImageY;
