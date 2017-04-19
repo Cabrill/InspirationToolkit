@@ -73,8 +73,11 @@ private void updateKeywords()
       randomChoice = (int)random(0, oppositeWordList.size());
       oppositeKeyword = oppositeWordList.get(randomChoice);
     }
-    randomChoice = (int)random(0, randomWords.size());
-    randomKeyword = randomWords.get(randomChoice);
+    if (randomWords != null && randomWords.size() > 0)
+    {
+      randomChoice = (int)random(0, randomWords.size());
+      randomKeyword = randomWords.get(randomChoice);
+    }
   }
 }
 
