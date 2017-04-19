@@ -24,6 +24,8 @@ String oppositeKeyword = "Ice";
 
 int time;
 int wait = 5000;
+int timeWord;
+int waitWordDraw = 1000;
 
 int imageFallSpeed = 2;
 
@@ -38,12 +40,16 @@ public void setup() {
   thread("fetchData");
   thread("updateWordRetrival");
   time = millis();
+  timeWord = millis();
 }      
 
 public void draw() {
+  if (millis() - timeWord >= waitWordDraw) {
+    addWordToOnScreenWords();
+    timeWord = millis();
+  }
   if (millis() - time >= wait) {
     fetchData();
-    addWordToOnScreenWords();
     time = millis();
   }
   drawUI();
