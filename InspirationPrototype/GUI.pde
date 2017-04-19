@@ -90,14 +90,23 @@ public void initializeGUI()
 public void drawDebugText()
 {
   textSize(12);
-  text("Similar Image Count:" + (similarImages == null ? 0 : similarImages.size()), width/2, height/2);
-  text("Random Image Count:" + (randomImages == null ? 0 : randomImages.size()), width/2, 20 + height/2);
-  text("Opposite Image Count:" + (oppositeImages == null ? 0 : oppositeImages.size()), width/2, 40 + height/2);
+
+  text("Similar Keyword: " + similarKeyword, width/2, height-100);
+  text("Random Keyword: " + randomKeyword, width/2, height-150);
+  text("Opposite Keyword: " + oppositeKeyword, width/2, height-200);
+    
+  text("Similar Image Count:" + (similarImages == null ? 0 : similarImages.size()), collectedImageTitleX + collectedWordTitleWidth - 150, collectedWordTitleY - 60);
+  text("Random Image Count:" + (randomImages == null ? 0 : randomImages.size()), collectedImageTitleX + collectedWordTitleWidth - 150, collectedWordTitleY - 40);
+  text("Opposite Image Count:" + (oppositeImages == null ? 0 : oppositeImages.size()), collectedImageTitleX + collectedWordTitleWidth - 150, collectedWordTitleY - 20);
 }
 
 public void drawUI()
 {
   image(prerenderedGUI, 0, 0, displayWidth, displayHeight);
+  if (debugEnabled)
+  {
+    drawDebugText();
+  }
 }
 
 public void drawFullUI() {
@@ -132,19 +141,6 @@ public void drawFullUI() {
   //collectednWordTitle
   image(wordFrame, collectedWordTitleX, collectedWordTitleY, collectedWordTitleWidth, collectedWordTitleHeight);
   text("Collected Words", collectedWordTitleX + (collectedWordTitleWidth/6), collectedWordTitleY + (collectedWordTitleHeight*0.75));
-
-  if (debugEnabled)
-  {
-    drawDebug();
-  }
-}
-
-private void drawDebug()
-{
-  textSize(12);
-  text("Similar Image Count:" + (similarImages == null ? 0 : similarImages.size()), collectedImageTitleX + collectedWordTitleWidth - 150, collectedWordTitleY - 60);
-  text("Random Image Count:" + (randomImages == null ? 0 : randomImages.size()), collectedImageTitleX + collectedWordTitleWidth - 150, collectedWordTitleY - 40);
-  text("Opposite Image Count:" + (oppositeImages == null ? 0 : oppositeImages.size()), collectedImageTitleX + collectedWordTitleWidth - 150, collectedWordTitleY - 20);
 }
 
 private void setupUICoordinates()

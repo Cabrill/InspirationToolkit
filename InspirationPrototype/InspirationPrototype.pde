@@ -25,7 +25,7 @@ String oppositeKeyword = "Ice";
 int time;
 int wait = 5000;
 
-int imageFallSpeed = 4;
+int imageFallSpeed = 2;
 
 public void setup() {
   fullScreen();
@@ -52,6 +52,24 @@ public void draw() {
   drawCollectedImages();
   drawCollectedWords();
   drawCollectedPoems();
+  updateKeywords();
+}
+
+private void updateKeywords()
+{
+  if (collectedWords.size() != 0)
+  {
+    int randomChoice = (int)random(0, collectedWords.size());
+    similarKeyword = collectedWords.get(randomChoice);
+    StringList oppositeWordList = oppositeWords.get(similarKeyword);
+    if (oppositeWordList != null && oppositeWordList.size() > 0)
+    {
+      randomChoice = (int)random(0, oppositeWordList.size());
+      oppositeKeyword = oppositeWordList.get(randomChoice);
+    }
+    randomChoice = (int)random(0, randomWords.size());
+    randomKeyword = randomWords.get(randomChoice);
+  }
 }
 
 void mousePressed() {
