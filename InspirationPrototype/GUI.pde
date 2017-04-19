@@ -3,6 +3,7 @@ PImage backgroundImage;
 PImage areaImage;
 PImage typeBar;
 PImage wordFrame;
+PImage prerenderedGUI;
 
 //GUI coordinates
 float largeAreaHeight;
@@ -82,6 +83,8 @@ public void initializeGUI()
   areaImage = loadImage("area.png");
   typeBar = loadImage("type_bar.png");
   wordFrame = loadImage("word_frame.png");
+  drawFullUI();
+  prerenderedGUI = get(0,0,width,height);
 }
 
 public void drawDebugText()
@@ -92,7 +95,12 @@ public void drawDebugText()
   text("Opposite Image Count:" + (oppositeImages == null ? 0 : oppositeImages.size()), width/2, 40 + height/2);
 }
 
-public void drawUI() {
+public void drawUI()
+{
+  image(prerenderedGUI, 0, 0, displayWidth, displayHeight);
+}
+
+public void drawFullUI() {
   textAlign(LEFT);
   //Background
   image(backgroundImage, 0, 0, displayWidth, displayHeight);
