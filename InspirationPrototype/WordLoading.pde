@@ -152,3 +152,16 @@ public String getClickedWord(int x, int y) {
   }
   return null;
 }
+
+public void handleMouseClickedForWords()
+{
+  if (mouseX >= wordSimilarAppearX && mouseY >= wordAppearY && mouseY <= imageDisappearY) 
+  {
+    String clicked = getClickedWord(mouseX,mouseY); 
+    if (clicked != null) 
+    {
+       collectedWords.append(clicked);
+       onSreenWords.remove(clicked);
+    }
+  }
+}
