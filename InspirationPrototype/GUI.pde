@@ -78,7 +78,7 @@ float collectedImageWidth;
 public void initializeGUI()
 {
   setupUICoordinates();
-  backgroundImage = loadImage("blue_sunburst.jpg");
+  backgroundImage = loadImage("blue_sunburst.png");
   areaImage = loadImage("area.png");
   typeBar = loadImage("type_bar.png");
   wordFrame = loadImage("word_frame.png");
