@@ -78,10 +78,10 @@ public void updateWordLocations() {
   for (String word : onSreenWords.keySet()) {
     textSize(25);
     text(word, onSreenWords.get(word)[0], onSreenWords.get(word)[1]);
-    if ((onSreenWords.get(word)[1] + 5) > imageDisappearY) {
+    if ((onSreenWords.get(word)[1] + 1) > imageDisappearY) {
       deletable.append(word);
     } else { 
-      onSreenWords.put(word, new float[]{onSreenWords.get(word)[0], onSreenWords.get(word)[1] + 5});
+      onSreenWords.put(word, new float[]{onSreenWords.get(word)[0], onSreenWords.get(word)[1] + 1});
     }
   }
   for (String del : deletable) {
@@ -105,36 +105,53 @@ public void addWordToOnScreenWords() {
 }
 
 public void addRandomWord() {
-  String word = randomWords.remove((int)random(randomWords.size()));
-  onSreenWords.put(word, new float[]{wordRandomAppearX, wordAppearY});
+  if (randomWords.size() != 0) {
+    String word = randomWords.remove((int)random(randomWords.size()));
+    if (canDrawWord()) {
+      onSreenWords.put(word, new float[]{wordRandomAppearX, wordAppearY});
+    }
+  }
+}
+
+public boolean canDrawWord() {
+  for (String word : onSreenWords.keySet()) {
+    if (onSreenWords.get(word)[1] <= (wordAppearY + 25)) {
+      return false;
+    }
+  }
+  return true;
 }
 
 public void addSimilarWord() {
-  if (similarWords.size() > 0) {
-    ArrayList<String> keys = new ArrayList<String>(similarWords.keySet());
-    String randomKey = keys.get((int)random(keys.size()));
-    StringList words = similarWords.get(randomKey);
-    if (words.size() != 0) {
-      String word = words.remove((int)random(words.size()));
-      similarWords.put(randomKey, words);
-      onSreenWords.put(word, new float[]{wordSimilarAppearX, wordAppearY});
-      if (words.size() == 0) {
-        similarWords.remove(word);
+  if (canDrawWord()) {
+    if (similarWords.size() > 0) {
+      ArrayList<String> keys = new ArrayList<String>(similarWords.keySet());
+      String randomKey = keys.get((int)random(keys.size()));
+      StringList words = similarWords.get(randomKey);
+      if (words.size() != 0) {
+        String word = words.remove((int)random(words.size()));
+        similarWords.put(randomKey, words);
+        onSreenWords.put(word, new float[]{wordSimilarAppearX, wordAppearY});
+        if (words.size() == 0) {
+          similarWords.remove(word);
+        }
       }
     }
   }
 }
 public void addOppositeWord() {
-  if (oppositeWords.size() > 0) {
-    ArrayList<String> keys = new ArrayList<String>(oppositeWords.keySet());
-    String randomKey = keys.get((int)random(keys.size()));
-    StringList words = oppositeWords.get(randomKey);
-    if (words.size() != 0) {
-      String word = words.remove((int)random(words.size()));
-      oppositeWords.put(randomKey, words);
-      onSreenWords.put(word, new float[]{wordOppositeAppearX, wordAppearY});
-      if (words.size() == 0) {
-        oppositeWords.remove(word);
+  if (canDrawWord()) {
+    if (oppositeWords.size() > 0) {
+      ArrayList<String> keys = new ArrayList<String>(oppositeWords.keySet());
+      String randomKey = keys.get((int)random(keys.size()));
+      StringList words = oppositeWords.get(randomKey);
+      if (words.size() != 0) {
+        String word = words.remove((int)random(words.size()));
+        oppositeWords.put(randomKey, words);
+        onSreenWords.put(word, new float[]{wordOppositeAppearX, wordAppearY});
+        if (words.size() == 0) {
+          oppositeWords.remove(word);
+        }
       }
     }
   }
@@ -145,10 +162,6 @@ public String getClickedWord(int x, int y) {
     int wordX = (int)onSreenWords.get(word)[0];
     int wordY = (int)onSreenWords.get(word)[1];
     textSize(25);
-    println("mouse: " + x + " " + y);
-    println("wordX min: " + wordX + " max: " + (wordX + textWidth(word)));
-    println("wordY min: " + (wordY - 25) + " max: " + wordY);
-    println(word);
     if (wordX <= x && (wordX + textWidth(word)) >= x && (wordY-25) <= y && wordY >= y) {
       return word;
     }
@@ -160,11 +173,11 @@ public void handleMouseClickedForWords()
 {
   if (mouseX >= wordSimilarAppearX && mouseY >= wordAppearY && mouseY <= imageDisappearY) 
   {
-    String clicked = getClickedWord(mouseX,mouseY); 
+    String clicked = getClickedWord(mouseX, mouseY); 
     if (clicked != null) 
     {
-       collectedWords.append(clicked);
-       onSreenWords.remove(clicked);
+      collectedWords.append(clicked);
+      onSreenWords.remove(clicked);
     }
   }
 }
