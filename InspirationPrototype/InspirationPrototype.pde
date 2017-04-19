@@ -61,20 +61,16 @@ public void draw() {
   updateKeywords();
 }
 
-private void updateKeywords()
-{
-  if (collectedWords.size() != 0)
-  {
+private void updateKeywords() {
+  if (collectedWords.size() != 0) {
     int randomChoice = (int)random(0, collectedWords.size());
     similarKeyword = collectedWords.get(randomChoice);
     StringList oppositeWordList = oppositeWords.get(similarKeyword);
-    if (oppositeWordList != null && oppositeWordList.size() > 0)
-    {
+    if (oppositeWordList != null && oppositeWordList.size() > 0) {
       randomChoice = (int)random(0, oppositeWordList.size());
       oppositeKeyword = oppositeWordList.get(randomChoice);
     }
-    if (randomWords != null && randomWords.size() > 0)
-    {
+    if (randomWords != null && randomWords.size() > 0) {
       randomChoice = (int)random(0, randomWords.size());
       randomKeyword = randomWords.get(randomChoice);
     }
@@ -92,8 +88,7 @@ void fetchData() {
   updatePoemRetrieval();
 }
 
-void drawCollectedWords()
-{
+void drawCollectedWords() {
   int rowGap = 25;
   int colGap = 50;
   float startX = collectedWordAreaX;
@@ -102,12 +97,10 @@ void drawCollectedWords()
   float wordY = startY;
 
   textSize(24);
-  for (int i = 0; i < collectedWords.size(); i++)
-  {
+  for (int i = 0; i < collectedWords.size(); i++) {
     text(collectedWords.get(i), wordX, wordY);
     wordY += rowGap;
-    if (wordY >= (collectedWordAreaY + collectedWordAreaHeight)-rowGap)
-    {
+    if (wordY >= (collectedWordAreaY + collectedWordAreaHeight)-rowGap) {
       wordY = startY;
       wordX += colGap;
     }
@@ -123,7 +116,6 @@ boolean overRect(float x, float y, float width, float height) {
   }
 }
 
-private KeywordType nextKeywordType(KeywordType kt)
-{
+private KeywordType nextKeywordType(KeywordType kt) {
   return KeywordType.values()[(kt.ordinal() + 1) % 3];
 }

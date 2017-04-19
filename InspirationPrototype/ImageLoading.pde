@@ -28,8 +28,11 @@ ArrayList<OnScreenImage> onScreenOppositeImages = new ArrayList<OnScreenImage>()
 
 ImageLoader loader;
 
+//Declaration of local variables for reuse
 private Image img;
 private PImage pimg;
+private OnScreenImage osi;
+private ArrayList<OnScreenImage> OSI;
 
 public void initializeImageLoader()
 {
@@ -129,7 +132,7 @@ public void removeOffScreenImages(ArrayList<OnScreenImage> imageList, float yRem
 
 public boolean drawImages(ArrayList<OnScreenImage> imageList)
 {
-  OnScreenImage osi = getAnyHoveredImage(imageList);
+  osi = getAnyHoveredImage(imageList);
   if (osi != null)
   {
     image(osi.getImage().getImg(), zoomedImageX, zoomedImageY, zoomedImageWidth, zoomedImageHeight);
@@ -167,7 +170,7 @@ public boolean drawImages(ArrayList<OnScreenImage> imageList)
 
 public void chooseAnyClickedImage(ArrayList<OnScreenImage> imageList)
 {
-  OnScreenImage osi = getAnyHoveredImage(imageList);
+  osi = getAnyHoveredImage(imageList);
   if (osi != null)
   {
     addImageToCollection(osi);
@@ -187,19 +190,17 @@ public void chooseAnyClickedImage(ArrayList<OnScreenImage> imageList)
   }
 }
 
-private void addImageToCollection(OnScreenImage osi)
+private void addImageToCollection(OnScreenImage onScreenImage)
 {
-  collectedImages.addImage(osi.getImage());
-  String keyword = osi.getSourceKeyword();
+  collectedImages.addImage(onScreenImage.getImage());
+  String keyword = onScreenImage.getSourceKeyword();
   if (!collectedWords.hasValue(keyword)){
-    collectedWords.append(osi.getSourceKeyword());
+    collectedWords.append(onScreenImage.getSourceKeyword());
   }
 }
 
 public OnScreenImage getAnyHoveredImage(ArrayList<OnScreenImage> imageList)
 {
-  OnScreenImage osi;
-  
   for (int i = imageList.size(); i > 0; i--)
   {
       osi = imageList.get(i-1);
@@ -220,8 +221,6 @@ public OnScreenImage getAnyHoveredImage(ArrayList<OnScreenImage> imageList)
 
 public boolean anyImageIsZoomed(ArrayList<OnScreenImage> imageList)
 {
-  OnScreenImage osi;
-  
   for (int i = imageList.size(); i > 0; i--)
   {
       osi = imageList.get(i-1);
@@ -285,10 +284,10 @@ void updateImageLocations()
     {
       anyZoomed = drawImages(onScreenOppositeImages);
     }
-      if (millis() - startTime > debugTimer)
-      {
-        debugTimer = millis() - startTime;
-      }
+    if (millis() - startTime > debugTimer)
+    {
+      debugTimer = millis() - startTime;
+    }
     
     if (anyZoomed)
     {
@@ -319,25 +318,27 @@ public void handleMouseClickedForImages()
   }
 }
 
-public void drawCollectedImages()
-{
-  if (collectedImages.size() > 0)
-  {
-    float startX = collectedImageAreaX + 5;
-    float startY = collectedImageAreaY + collectedImageTitleHeight + 5;
-    float imageX = startX;
-    float imageY = startY;
-    float rowGap = collectedImageHeight+10;
-    float colGap = 20;
-    
-    float areaCheck;
 
-    for (int i = 0; i < collectedImages.size(); i++)
-    {
+private float startX;
+private float startY;
+private float imageX;
+private float imageY;
+private float rowGap;
+private float colGap;
+private float areaCheck;
+public void drawCollectedImages() {
+  if (collectedImages.size() > 0) {
+    startX = collectedImageAreaX + 5;
+    startY = collectedImageAreaY + collectedImageTitleHeight + 5;
+    imageX = startX;
+    imageY = startY;
+    rowGap = collectedImageHeight+10;
+    colGap = 20;
+    
+    for (int i = 0; i < collectedImages.size(); i++) {
       img = collectedImages.getImage(i);
       areaCheck = (i == collectedImages.size()-1 ? collectedImageWidth : colGap);
-      if (overRect(imageX, imageY, areaCheck, collectedImageAreaHeight))
-      {
+      if (overRect(imageX, imageY, areaCheck, collectedImageAreaHeight)) {
         image(img.getImg(), startX, startY, collectedImageAreaHeight*.9, collectedImageAreaHeight*.9);
         break;
       }
@@ -345,12 +346,10 @@ public void drawCollectedImages()
       
       imageX += colGap;
       
-      if (imageX > collectedImageAreaX + (collectedImageAreaWidth - collectedImageWidth))
-      {
+      if (imageX > collectedImageAreaX + (collectedImageAreaWidth - collectedImageWidth)) {
         imageX = startX;
         imageY += rowGap;
       }
-
     }
   }
 }

@@ -26,8 +26,7 @@ JSONArray data;
 
 private static final String api = "http://poetrydb.org";
 
-public void updatePoemRetrieval()
-{
+public void updatePoemRetrieval() {
   if (overRect(poemAreaX, poemAreaY, poemAreaWidth, poemAreaHeight)) {
     return;
   } else if (index < similarPoems.size() - 1) {
@@ -42,8 +41,7 @@ public void updatePoemRetrieval()
   }
 }
 
-public void getPoems(String keyword, Boolean searchLines)
-{
+public void getPoems(String keyword, Boolean searchLines) {
   GetRequest get;
   if (searchLines) {
     get = new GetRequest(api + "/lines/" + keyword);
@@ -71,8 +69,7 @@ public void getPoems(String keyword, Boolean searchLines)
   }
 }
 
-void drawCollectedPoems()
-{
+void drawCollectedPoems() {
   int rowGap = 25;
   float topLimit = poemAreaY + poemTitleBarY + 40;
   float poemX = poemAreaX;
@@ -95,8 +92,7 @@ void drawCollectedPoems()
   }
   rowGap += 15;
 
-  for (int i = 1; i < lines.size(); i++)
-  {
+  for (int i = 1; i < lines.size(); i++) {
     rowGap += 15;
     String p = lines.getString(i);
 

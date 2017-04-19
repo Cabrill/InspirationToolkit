@@ -78,8 +78,7 @@ float collectedImageWidth;
 
 int debugTimer = 0;
 
-public void initializeGUI()
-{
+public void initializeGUI(){
   setupUICoordinates();
   backgroundImage = loadImage("blue_sunburst.png");
   areaImage = loadImage("area.png");
@@ -89,8 +88,7 @@ public void initializeGUI()
   prerenderedGUI = get(0, 0, width, height);
 }
 
-public void drawDebugText()
-{
+public void drawDebugText() {
   textSize(12);
 
   text("Similar Keyword: " + similarKeyword, width/2, height-100);
@@ -106,11 +104,9 @@ public void drawDebugText()
   }
 }
 
-public void drawUI()
-{
+public void drawUI() {
   image(prerenderedGUI, 0, 0, displayWidth, displayHeight);
-  if (debugEnabled)
-  {
+  if (debugEnabled)  {
     drawDebugText();
   }
 }
@@ -149,8 +145,7 @@ public void drawFullUI() {
   text("Collected Words", collectedWordTitleX + (collectedWordTitleWidth/6), collectedWordTitleY + (collectedWordTitleHeight*0.75));
 }
 
-private void setupUICoordinates()
-{
+private void setupUICoordinates() {
   largeAreaHeight = height*0.98;
   largeAreaY = height*0.01;
   areaGap = width*0.01;

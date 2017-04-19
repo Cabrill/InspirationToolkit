@@ -13,8 +13,7 @@ class OnScreenImage {
   private boolean isZoomed;
   private String sourceKeyword;
   
-  public OnScreenImage(Image img, float x, float y, String keyword)
-  {
+  public OnScreenImage(Image img, float x, float y, String keyword) {
     image = img;
     imageX = x;
     imageY = y;
@@ -22,73 +21,59 @@ class OnScreenImage {
     sourceKeyword = keyword;
   }
   
-  public float getX()
-  {
+  public float getX() {
     return imageX;
   }
   
-  public float getY()
-  {
+  public float getY() {
     return imageY;
   }
   
-  public float getWidth()
-  {
+  public float getWidth() {
     return imageWidth;
   }
   
-  public float getHeight()
-  {
+  public float getHeight() {
     return imageHeight;
   }
   
-  public float getEffectiveX()
-  {
+  public float getEffectiveX() {
     return effectiveX;
   }
   
-  public boolean getIsZoomed()
-  {
+  public boolean getIsZoomed() {
    return isZoomed; 
   }
   
-  public String getSourceKeyword()
-  {
+  public String getSourceKeyword() {
    return sourceKeyword; 
   }
   
-  public Image getImage()
-  {
+  public Image getImage() {
     return image;
   }
 
-  public void setX(float x)
-  {
+  public void setX(float x) {
     imageX = x;
   }
   
-  public void setY(float y)
-  {
+  public void setY(float y) {
     imageY = y;
   }
   
-  public void setWidth(float w)
-  {
+  public void setWidth(float w) {
     imageWidth = w;
   }
   
-  public void setHeight(float h)
-  {
+  public void setHeight(float h) {
     imageHeight = h;
   }
     
-  public void setEffectiveX(float ex)
-  {
+  public void setEffectiveX(float ex) {
     effectiveX = ex;
   }
   
-  public void setIsZoomed(boolean zoomed)
-  {
+  public void setIsZoomed(boolean zoomed) {
     isZoomed = zoomed; 
   }
 }
@@ -98,35 +83,29 @@ class OnScreenWord {
   private float wordY;
   private String word;
   
-  public OnScreenWord(String newWord, float x, float y)
-  {
+  public OnScreenWord(String newWord, float x, float y) {
     word = newWord;
     wordX = x;
     wordY = y;
   }
   
-  public float getX()
-  {
+  public float getX() {
     return wordX;
   }
   
-  public float getY()
-  {
+  public float getY() {
     return wordY;
   }
   
-  public String getWord()
-  {
+  public String getWord() {
     return word;
   }
 
-  public void setX(float x)
-  {
+  public void setX(float x) {
     wordX = x;
   }
   
-  public void setY(float y)
-  {
+  public void setY(float y) {
     wordY = y;
   }
 }
@@ -137,31 +116,26 @@ class Poem {
   private String poemKeyword;
   private long timestamp;
   
-  public Poem(String id, long ts, String text, String keyword)
-  {
+  public Poem(String id, long ts, String text, String keyword) {
    timestamp = ts;
    poemId = id;
    poemText = text;
    poemKeyword = keyword;
   }
   
-  String getId()
-  {
+  String getId() {
    return poemId; 
   }
   
-  String getText()
-  {
+  String getText() {
    return poemText; 
   }
   
-  String getKeyword()
-  {
+  String getKeyword() {
    return poemKeyword; 
   }
   
-  long getTimestamp()
-  {
+  long getTimestamp() {
     return timestamp;
   }
 }

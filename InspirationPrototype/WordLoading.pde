@@ -29,8 +29,7 @@ public void updateWordRetrival() {
   }
 }
 
-public StringList getWordsSimilarTo(String word)
-{
+public StringList getWordsSimilarTo(String word) {
   StringList list = new StringList();
   GetRequest get = new GetRequest(url + "?ml=" + word);
   get.send();
@@ -48,15 +47,13 @@ public StringList getWordsSimilarTo(String word)
   return list;
 }
 
-public String getRandomWord()
-{
+public String getRandomWord() {
   GetRequest get = new GetRequest(randomURL);
   get.send();
   return get.getContent();
 }
 
-public StringList getOppositeWords(String word)
-{
+public StringList getOppositeWords(String word) {
   StringList returnList = new StringList();
 
   GetRequest get = new GetRequest(url + "?rel_ant=" + word);
@@ -169,13 +166,10 @@ public String getClickedWord(int x, int y) {
   return null;
 }
 
-public void handleMouseClickedForWords()
-{
-  if (mouseX >= wordSimilarAppearX && mouseY >= wordAppearY && mouseY <= imageDisappearY) 
-  {
+public void handleMouseClickedForWords() {
+  if (mouseX >= wordSimilarAppearX && mouseY >= wordAppearY && mouseY <= imageDisappearY)  {
     String clicked = getClickedWord(mouseX, mouseY); 
-    if (clicked != null) 
-    {
+    if (clicked != null)  {
       collectedWords.append(clicked);
       onSreenWords.remove(clicked);
     }
