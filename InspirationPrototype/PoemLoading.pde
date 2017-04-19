@@ -56,6 +56,7 @@ public void getPoems(String keyword, Boolean searchLines)
 
   if (response.contains("\"status\":404")) {
     println("No poem found with keyword: " + keyword);
+    index = 0;
   } else {
     data = JSONArray.parse(response);
 
