@@ -20,7 +20,10 @@ public void updateWordRetrival() {
         similarWords.put(collected, getWordsSimilarTo(collected));
       } 
       if (!oppositeWords.containsKey(collected)) {
-        oppositeWords.put(collected, getOppositeWords(collected));
+        StringList opposite = getOppositeWords(collected);
+        if (opposite.size() != 0) {
+          oppositeWords.put(collected, getOppositeWords(collected));
+        }
       }
     }
   }
@@ -31,6 +34,7 @@ public void updateWordRetrival() {
 
 public StringList getWordsSimilarTo(String word)
 {
+  word = word.replaceAll("\\s","+");
   StringList list = new StringList();
   GetRequest get = new GetRequest(url + "?ml=" + word);
   get.send();
@@ -57,6 +61,7 @@ public String getRandomWord()
 
 public StringList getOppositeWords(String word)
 {
+  word = word.replaceAll("\\s","+");
   StringList returnList = new StringList();
 
   GetRequest get = new GetRequest(url + "?rel_ant=" + word);
@@ -90,17 +95,13 @@ public void updateWordLocations() {
 }
 
 public void addWordToOnScreenWords() {
-  int random = (int) random(3);
-  switch(random) {
-  case 0: 
-    addRandomWord();
-    break;
-  case 1: 
+  int random = (int) random(8);
+  if (random <= 2) {
     addSimilarWord();
-    break;
-  case 2: 
+  } else if (random >= 5) {
     addOppositeWord();
-    break;
+  } else {
+    addRandomWord();
   }
 }
 
@@ -145,6 +146,7 @@ public void addOppositeWord() {
       ArrayList<String> keys = new ArrayList<String>(oppositeWords.keySet());
       String randomKey = keys.get((int)random(keys.size()));
       StringList words = oppositeWords.get(randomKey);
+
       if (words.size() != 0) {
         String word = words.remove((int)random(words.size()));
         oppositeWords.put(randomKey, words);
