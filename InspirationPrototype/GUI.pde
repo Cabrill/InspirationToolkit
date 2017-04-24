@@ -88,6 +88,20 @@ public void initializeGUI(){
   prerenderedGUI = get(0, 0, width, height);
 }
 
+String partiallyEnteredWord = "";
+public void drawPromptForStartWord()
+{
+  fill(100,100,100,200);
+  rect(0,0,width,height);
+  fill(200,200,200,255);
+  rect(width/3, height/3, width/3, height/3);
+  textSize(32);
+  fill(0,0,0);
+  text("Please enter a starting word:", (width/3)+100, (height/3)+50);
+  text(partiallyEnteredWord, width/2.5, (height/2));
+  fill(255,255,255,255);
+}
+
 public void drawDebugText() {
   textSize(12);
 

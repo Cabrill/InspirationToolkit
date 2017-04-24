@@ -36,12 +36,16 @@ public void updatePoemRetrieval() {
   } else {
     println("retrieving new poems");
     index++;
-    getPoems(similarKeyword, true);
+    keyword = similarKeyword;
+    searchLines = true;
+    thread("getPoems");
     println("retrieved");
   }
 }
 
-public void getPoems(String keyword, Boolean searchLines) {
+String keyword;
+Boolean searchLines;
+public void getPoems() {
   GetRequest get;
   if (searchLines) {
     get = new GetRequest(api + "/lines/" + keyword);
@@ -71,38 +75,42 @@ public void getPoems(String keyword, Boolean searchLines) {
 
 void drawCollectedPoems() {
   int rowGap = 25;
-  float topLimit = poemAreaY + poemTitleBarY + 40;
+  float topLimit = poemAreaY + poemTitleBarY + poemTitleBarHeight;
+  float bottomLimit = height - poemTitleBarHeight;
   float poemX = poemAreaX;
   float poemY = topLimit;
 
-  JSONObject poem = similarPoems.getJSONObject(index);
-  JSONArray lines = poem.getJSONArray("lines");
-
-  if (scrollEnabled && overRect(poemAreaX, poemAreaY, poemAreaWidth, poemAreaHeight)) {
-    poemScroll += 2;
-  }
-
-  poemY -= poemScroll;
-
-  String title = poem.getString("title");
-  textAlign(CENTER);
-  textSize(20);
-  if (poemY + rowGap > topLimit + 15) {
-    text(title, poemX, poemY, poemAreaWidth, poemAreaHeight);
-  }
-  rowGap += 15;
-
-  for (int i = 1; i < lines.size(); i++) {
-    rowGap += 15;
-    String p = lines.getString(i);
-
-    if (poemY + rowGap > topLimit) {
-      textSize(12);
-      text(p, poemX, poemY + rowGap, poemAreaWidth, poemAreaHeight);
+  if (similarPoems.size() > 0)
+  {
+    JSONObject poem = similarPoems.getJSONObject(index);
+    JSONArray lines = poem.getJSONArray("lines");
+  
+    if (scrollEnabled && overRect(poemAreaX, poemAreaY, poemAreaWidth, poemAreaHeight)) {
+      poemScroll += 2;
     }
+  
+    poemY -= poemScroll;
+  
+    String title = poem.getString("title");
+    textAlign(CENTER);
+    textSize(20);
+    if (poemY + rowGap > topLimit + 15) {
+      text(title, poemX, poemY, poemAreaWidth, poemAreaHeight);
+    }
+    rowGap += 15;
+  
+    for (int i = 1; i < lines.size(); i++) {
+      rowGap += 15;
+      String p = lines.getString(i);
+  
+      if (poemY + rowGap > topLimit && poemY + rowGap < bottomLimit) {
+        textSize(12);
+        text(p, poemX, poemY + rowGap, poemAreaWidth, poemAreaHeight);
+      }
+    }
+    if (poemY + rowGap > poemAreaHeight) {
+      scrollEnabled = true;
+    }
+    textAlign(LEFT);
   }
-  if (poemY + rowGap > poemAreaHeight) {
-    scrollEnabled = true;
-  }
-  textAlign(LEFT);
 }

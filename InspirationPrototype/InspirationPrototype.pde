@@ -17,6 +17,8 @@ HashMap<String, float[]> onSreenWords = new HashMap();
 
 KeywordType currentUpdatingKeyword = KeywordType.Similar;
 
+Boolean hasEnteredStartingWord;
+
 //Temporary hard-codedkeywords
 String similarKeyword = "Fire";
 String randomKeyword = "Random";
@@ -36,29 +38,34 @@ public void setup() {
   initializeGUI();
   initializeImageLoader();
   getWordsSimilarTo("Happy");
-  getPoems(similarKeyword, true);
   thread("fetchData");
   thread("updateWordRetrival");
   time = millis();
   timeWord = millis();
+  hasEnteredStartingWord = false;
 }      
 
 public void draw() {
-  if (millis() - timeWord >= waitWordDraw) {
-    addWordToOnScreenWords();
-    timeWord = millis();
-  }
-  if (millis() - time >= wait) {
-    fetchData();
-    time = millis();
-  }
   drawUI();
-  updateImageLocations();
-  updateWordLocations();
-  drawCollectedImages();
-  drawCollectedWords();
-  drawCollectedPoems();
-  updateKeywords();
+  if (!hasEnteredStartingWord) {
+    drawPromptForStartWord();
+  } else {
+    if (millis() - timeWord >= waitWordDraw) {
+      addWordToOnScreenWords();
+      timeWord = millis();
+    }
+    if (millis() - time >= wait) {
+      fetchData();
+      time = millis();
+    }
+    
+    updateImageLocations();
+    updateWordLocations();
+    drawCollectedImages();
+    drawCollectedWords();
+    drawCollectedPoems();
+    updateKeywords();
+  }
 }
 
 private void updateKeywords() {
@@ -80,6 +87,29 @@ private void updateKeywords() {
 void mousePressed() {
   handleMouseClickedForWords();
   handleMouseClickedForImages();
+}
+
+void keyPressed() {
+ if (!hasEnteredStartingWord)
+ {
+   // what key was it?   ---
+    if ( (key>='a'&&key<='z') || ( key >= 'A'&&key<='Z')) {
+      partiallyEnteredWord+=key; // add this key to our name
+    } // Letter 
+    else if (key==ENTER||key==RETURN) {
+      if (partiallyEnteredWord.length() > 0)
+      {
+        similarKeyword = partiallyEnteredWord;
+        collectedWords.append(similarKeyword);
+        hasEnteredStartingWord = true;
+      }
+    } // ENTER
+    else if (key==BACKSPACE) {
+      if (partiallyEnteredWord.length()>0) {
+        partiallyEnteredWord=partiallyEnteredWord.substring(0, partiallyEnteredWord.length()-1);
+      }
+    } // BACKSPACE
+ }
 }
 
 void fetchData() {
