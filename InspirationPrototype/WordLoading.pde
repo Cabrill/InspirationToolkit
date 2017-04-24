@@ -12,17 +12,20 @@ public static HashMap<String, StringList>  oppositeWords = new HashMap();
 private static final String url = "https://api.datamuse.com/words";
 private static final String randomURL = "http://randomword.setgetgo.com/get.php";
 
-public void updateWordRetrival() {
+public void updateWordRetrieval() {
   String random = getRandomWord();
   if (collectedWords.size() != 0) {
     for (String collected : collectedWords) {
       if (!similarWords.containsKey(collected)) {
-        similarWords.put(collected, getWordsSimilarTo(collected));
+        StringList similar = getWordsSimilarTo(collected);
+        if (similar.size() != 0) {
+          similarWords.put(collected, similar);
+        }
       } 
       if (!oppositeWords.containsKey(collected)) {
         StringList opposite = getOppositeWords(collected);
         if (opposite.size() != 0) {
-          oppositeWords.put(collected, getOppositeWords(collected));
+          oppositeWords.put(collected, opposite);
         }
       }
     }
@@ -35,7 +38,7 @@ public void updateWordRetrival() {
 
 public StringList getWordsSimilarTo(String word)
 {
-  word = word.replaceAll("\\s","+");
+  word = word.replaceAll("[^a-zA-Z]","").toLowerCase();
   StringList list = new StringList();
   GetRequest get = new GetRequest(url + "?ml=" + word);
   get.send();
@@ -45,7 +48,7 @@ public StringList getWordsSimilarTo(String word)
 
   for (int i = 0; i < jsonArray.size(); i++) {
     JSONObject json = jsonArray.getJSONObject(i); 
-    String currentWord = json.getString("word");
+    String currentWord = json.getString("word").replaceAll("[^a-zA-Z]","").toLowerCase();
     if (!list.hasValue(currentWord)) {
       list.append(currentWord);
     }
@@ -61,7 +64,7 @@ public String getRandomWord() {
 
 public StringList getOppositeWords(String word)
 {
-  word = word.replaceAll("\\s","+");
+  word = word.replaceAll("[^a-zA-Z]","").toLowerCase();
   StringList returnList = new StringList();
 
   GetRequest get = new GetRequest(url + "?rel_ant=" + word);
@@ -72,16 +75,16 @@ public StringList getOppositeWords(String word)
 
   for (int i = 0; i < jsonArray.size(); i++) {
     JSONObject json = jsonArray.getJSONObject(i); 
-    String currentWord = json.getString("word");
+    String currentWord = json.getString("word").replaceAll("[^a-zA-Z]","").toLowerCase();
     returnList.append(currentWord);
   }
   return returnList;
 }
 
 public void updateWordLocations() {
+  textSize(25);
   StringList deletable = new StringList();
   for (String word : onSreenWords.keySet()) {
-    textSize(25);
     text(word, onSreenWords.get(word)[0], onSreenWords.get(word)[1]);
     if ((onSreenWords.get(word)[1] + 1) > imageDisappearY) {
       deletable.append(word);
@@ -160,11 +163,12 @@ public void addOppositeWord() {
 }
 
 public String getClickedWord(int x, int y) {
+  int textSize = 25;
+  textSize(textSize);
   for (String word : onSreenWords.keySet()) {
     int wordX = (int)onSreenWords.get(word)[0];
     int wordY = (int)onSreenWords.get(word)[1];
-    textSize(25);
-    if (wordX <= x && (wordX + textWidth(word)) >= x && (wordY-25) <= y && wordY >= y) {
+    if (wordX <= x && (wordX + textWidth(word)) >= x && (wordY-textSize) <= y && wordY >= y) {
       return word;
     }
   }

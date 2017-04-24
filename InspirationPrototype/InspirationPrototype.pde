@@ -34,12 +34,8 @@ int imageFallSpeed = 2;
 public void setup() {
   fullScreen();
   chooseCurrentType = KeywordType.Similar;
-  //size(displayWidth, displayHeight);
   initializeGUI();
   initializeImageLoader();
-  getWordsSimilarTo("Happy");
-  thread("fetchData");
-  thread("updateWordRetrival");
   time = millis();
   timeWord = millis();
   hasEnteredStartingWord = false;
@@ -55,7 +51,7 @@ public void draw() {
       timeWord = millis();
     }
     if (millis() - time >= wait) {
-      fetchData();
+      thread("fetchData");
       time = millis();
     }
     
@@ -64,7 +60,9 @@ public void draw() {
     drawCollectedImages();
     drawCollectedWords();
     drawCollectedPoems();
-    updateKeywords();
+    if (isRefreshing== false) {
+      updateKeywords();
+    }
   }
 }
 
@@ -81,6 +79,7 @@ private void updateKeywords() {
       randomChoice = (int)random(0, randomWords.size());
       randomKeyword = randomWords.get(randomChoice);
     }
+    notifyImagesThatKeywordsChanged();
   }
 }
 
@@ -101,6 +100,7 @@ void keyPressed() {
       {
         similarKeyword = partiallyEnteredWord;
         collectedWords.append(similarKeyword);
+        thread("fetchData");
         hasEnteredStartingWord = true;
       }
     } // ENTER
@@ -113,8 +113,8 @@ void keyPressed() {
 }
 
 void fetchData() {
+  updateWordRetrieval();
   updateImageRetrieval();
-  updateWordRetrival();
   updatePoemRetrieval();
 }
 

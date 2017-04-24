@@ -132,7 +132,9 @@ public void removeOffScreenImages(ArrayList<OnScreenImage> imageList, float yRem
 
 public boolean drawImages(ArrayList<OnScreenImage> imageList)
 {
+  int startTime, endTime;
   osi = getAnyHoveredImage(imageList);
+  
   if (osi != null)
   {
     image(osi.getImage().getImg(), zoomedImageX, zoomedImageY, zoomedImageWidth, zoomedImageHeight);
@@ -151,6 +153,7 @@ public boolean drawImages(ArrayList<OnScreenImage> imageList)
     {
       osi = imageList.get(i);
       pimg = osi.getImage().getImg();
+
       imgX = osi.getX();
       imgY = osi.getY();
   
@@ -163,6 +166,7 @@ public boolean drawImages(ArrayList<OnScreenImage> imageList)
       osi.setEffectiveX(actualX);
       
       image(pimg, actualX, imgY, imgWidth, actualHeight);
+
     }
     return false;
   }
@@ -232,8 +236,11 @@ public boolean anyImageIsZoomed(ArrayList<OnScreenImage> imageList)
   return false;
 }
 
-void updateImageLocations()
+Boolean isPreLoading = false;
+void addNewImage()
 {
+  if (!isPreLoading)
+  {
     ImageList imgSource = null;
     float imageAppearX = 0;
     float earliestAppearY = 0;
@@ -262,9 +269,21 @@ void updateImageLocations()
       
     if (imgSource != null && imgSource.size() > 0 && earliestAppearY > (imageHeight+imageAppearY))
     {
-      OSI.add(new OnScreenImage(imgSource.getRandom(), imageAppearX, imageAppearY, keyword));
-      currentUpdatingKeyword = nextKeywordType(currentUpdatingKeyword); 
-    }
+      Image newImg = imgSource.getRandom();
+      //preload image source
+      isPreLoading = true;
+      PImage newPImg= newImg.getImg();
+      OSI.add(new OnScreenImage(newImg, imageAppearX, imageAppearY, keyword));
+      currentUpdatingKeyword = nextKeywordType(currentUpdatingKeyword);
+      isPreLoading = false;
+    } 
+  }
+}
+
+void updateImageLocations()
+{
+    thread("addNewImage");
+
     incrementAllY(onScreenSimilarImages, imageFallSpeed);
     incrementAllY(onScreenRandomImages, imageFallSpeed);
     incrementAllY(onScreenOppositeImages, imageFallSpeed);
@@ -272,9 +291,7 @@ void updateImageLocations()
     removeOffScreenImages(onScreenSimilarImages, imageDisappearY);
     removeOffScreenImages(onScreenRandomImages, imageDisappearY);
     removeOffScreenImages(onScreenOppositeImages, imageDisappearY);
-    
 
-    int startTime = millis();
     boolean anyZoomed = drawImages(onScreenSimilarImages);
     if (!anyZoomed)
     {
@@ -284,11 +301,7 @@ void updateImageLocations()
     {
       anyZoomed = drawImages(onScreenOppositeImages);
     }
-    if (millis() - startTime > debugTimer)
-    {
-      debugTimer = millis() - startTime;
-    }
-    
+
     if (anyZoomed)
     {
       imageFallSpeed = 0;

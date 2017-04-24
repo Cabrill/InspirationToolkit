@@ -33,6 +33,7 @@ public void updatePoemRetrieval() {
     index++;
     scrollEnabled = false;
     poemScroll = 0;
+    thread("loadPoem");
   } else {
     println("retrieving new poems");
     index++;
@@ -73,25 +74,36 @@ public void getPoems() {
   }
 }
 
-void drawCollectedPoems() {
-  int rowGap = 25;
-  float topLimit = poemAreaY + poemTitleBarY + poemTitleBarHeight;
-  float bottomLimit = height - poemTitleBarHeight;
-  float poemX = poemAreaX;
-  float poemY = topLimit;
+String title;
+JSONObject poem;
+JSONArray lines;
+StringList poemLines;
+void loadPoem()
+{
+  poem = similarPoems.getJSONObject(index);
+  lines = poem.getJSONArray("lines");
+  title = poem.getString("title");
+  poemLines = new StringList();
+  for (int i = 1; i < lines.size(); i++) {
+      poemLines.append(lines.getString(i));
+  }
+}
 
-  if (similarPoems.size() > 0)
+void drawCollectedPoems() {
+  int startTime = millis();
+  if (similarPoems.size() > index-1 && poemLines != null && poemLines.size() > 0)
   {
-    JSONObject poem = similarPoems.getJSONObject(index);
-    JSONArray lines = poem.getJSONArray("lines");
-  
+    
+    int rowGap = 25;
+    float topLimit = poemAreaY + poemTitleBarY + poemTitleBarHeight;
+    float poemX = poemAreaX;
+    float poemY = topLimit;
+
     if (scrollEnabled && overRect(poemAreaX, poemAreaY, poemAreaWidth, poemAreaHeight)) {
       poemScroll += 2;
     }
-  
     poemY -= poemScroll;
   
-    String title = poem.getString("title");
     textAlign(CENTER);
     textSize(20);
     if (poemY + rowGap > topLimit + 15) {
@@ -99,18 +111,23 @@ void drawCollectedPoems() {
     }
     rowGap += 15;
   
-    for (int i = 1; i < lines.size(); i++) {
+    textSize(12);
+    for (int i = 1; i < poemLines.size(); i++) {
       rowGap += 15;
-      String p = lines.getString(i);
-  
-      if (poemY + rowGap > topLimit && poemY + rowGap < bottomLimit) {
-        textSize(12);
-        text(p, poemX, poemY + rowGap, poemAreaWidth, poemAreaHeight);
+
+      if (poemY + rowGap > topLimit && poemY + rowGap < poemAreaHeight) {
+        text(poemLines.get(i), poemX, poemY + rowGap, poemAreaWidth, poemAreaHeight);
+      }
+      else if (poemY + rowGap > poemAreaHeight) {
+         scrollEnabled = true;
+         break; 
       }
     }
-    if (poemY + rowGap > poemAreaHeight) {
-      scrollEnabled = true;
-    }
+
     textAlign(LEFT);
   }
+  int endTime = (millis() - startTime);
+    if (endTime > 30) {
+      println("Took " + endTime + "ms to draw poems");
+    }
 }
