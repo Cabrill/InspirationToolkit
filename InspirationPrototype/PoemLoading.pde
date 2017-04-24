@@ -47,6 +47,7 @@ public void updatePoemRetrieval() {
 String keyword;
 Boolean searchLines;
 public void getPoems() {
+  keyword = keyword.replaceAll("\\s","+");
   GetRequest get;
   if (searchLines) {
     get = new GetRequest(api + "/lines/" + keyword);
@@ -90,7 +91,6 @@ void loadPoem()
 }
 
 void drawCollectedPoems() {
-  int startTime = millis();
   if (similarPoems.size() > index-1 && poemLines != null && poemLines.size() > 0)
   {
     
@@ -126,8 +126,4 @@ void drawCollectedPoems() {
 
     textAlign(LEFT);
   }
-  int endTime = (millis() - startTime);
-    if (endTime > 30) {
-      println("Took " + endTime + "ms to draw poems");
-    }
 }

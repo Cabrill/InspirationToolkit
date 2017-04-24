@@ -15,6 +15,7 @@ String apiSecret = "c5f08b40712e9b20";
 int timeOutSeconds = 60;
 
 KeywordType currentRetrievingKeyword = KeywordType.Similar;
+KeywordType currentUpdatingKeyword = KeywordType.Similar;
 Boolean isRetrieving;
 Boolean isRefreshing = true;
 
@@ -33,6 +34,10 @@ private Image img;
 private PImage pimg;
 private OnScreenImage osi;
 private ArrayList<OnScreenImage> OSI;
+int loadStartTime;
+int timeOut = 3;
+int initialImageFallSpeed = 4;
+int imageFallSpeed = initialImageFallSpeed;
 
 public void initializeImageLoader()
 {
@@ -52,32 +57,40 @@ public void updateImageRetrieval()
         case Opposite: retrievalList = oppositeImages; break;
       } 
       //Once a list begins receiving images, it will continue until it hits 50 so we just monitor until it hits 1
-     if (retrievalList != null && retrievalList.size() >= 1)
+     if (millis() - loadStartTime > timeOut || (retrievalList != null && retrievalList.size() >= 1))
      {
          stopLoading();
          currentRetrievingKeyword = nextKeywordType(currentRetrievingKeyword);
          
          //If we completed all three (Similar/Random/Opposite) and are back to Similar, then stop refreshing for now.
          isRefreshing = (currentRetrievingKeyword == KeywordType.Similar ? false : true); 
-     }
+     } 
   }
     
   if (isRefreshing && !isRetrieving)
   {
+    println("Retrieving images for keyword type: " +currentRetrievingKeyword);
     switch (currentRetrievingKeyword)
     {
       case Similar:
-        similarImages = retrieveImages(similarKeyword); break;
+        if (similarKeyword != null) similarImages = retrieveImages(similarKeyword);
+        else similarImages = retrieveImages(getRandomWord());
+        break;
       case Random:
-        randomImages = retrieveImages(randomKeyword); break;
+        if (randomKeyword != null) randomImages = retrieveImages(randomKeyword);
+        else randomImages = retrieveImages(getRandomWord());
+        break;
       case Opposite:
-        oppositeImages = retrieveImages(oppositeKeyword); break;
+      if (oppositeKeyword != null) oppositeImages = retrieveImages(oppositeKeyword);
+      else oppositeImages = retrieveImages(getRandomWord());
+      break;
     } 
   }
 }
 
 public void notifyImagesThatKeywordsChanged()
 {
+    loadStartTime = millis();
     isRefreshing = true;
     isRetrieving = false;
     currentRetrievingKeyword = KeywordType.Similar;
@@ -91,6 +104,7 @@ private void stopLoading()
 
 private ImageList retrieveImages(String keyword)
 {
+  println("Retrieving images for word: " + keyword);
   isRetrieving = true;
   return loader.start(keyword, false, timeOutSeconds * 1000);
 }
@@ -132,7 +146,6 @@ public void removeOffScreenImages(ArrayList<OnScreenImage> imageList, float yRem
 
 public boolean drawImages(ArrayList<OnScreenImage> imageList)
 {
-  int startTime, endTime;
   osi = getAnyHoveredImage(imageList);
   
   if (osi != null)
@@ -200,7 +213,9 @@ private void addImageToCollection(OnScreenImage onScreenImage)
   String keyword = onScreenImage.getSourceKeyword();
   if (!collectedWords.hasValue(keyword)){
     collectedWords.append(onScreenImage.getSourceKeyword());
+    thread("updateKeywords");
   }
+  refreshCollectedImages = true;
 }
 
 public OnScreenImage getAnyHoveredImage(ArrayList<OnScreenImage> imageList)
@@ -236,10 +251,10 @@ public boolean anyImageIsZoomed(ArrayList<OnScreenImage> imageList)
   return false;
 }
 
-Boolean isPreLoading = false;
+Boolean isPreloading = false;
 void addNewImage()
 {
-  if (!isPreLoading)
+  if (!isPreloading)
   {
     ImageList imgSource = null;
     float imageAppearX = 0;
@@ -265,18 +280,21 @@ void addNewImage()
        earliestAppearY = Math.min(topOppositeY, topRandomY);
        break;
     }
-    
-      
+
     if (imgSource != null && imgSource.size() > 0 && earliestAppearY > (imageHeight+imageAppearY))
     {
+      isPreloading = true;
       Image newImg = imgSource.getRandom();
       //preload image source
-      isPreLoading = true;
       PImage newPImg= newImg.getImg();
       OSI.add(new OnScreenImage(newImg, imageAppearX, imageAppearY, keyword));
+      isPreloading = false;
       currentUpdatingKeyword = nextKeywordType(currentUpdatingKeyword);
-      isPreLoading = false;
     } 
+    else if (imgSource == null || imgSource.size() == 0)
+    {
+      currentUpdatingKeyword = nextKeywordType(currentUpdatingKeyword);
+    }
   }
 }
 
@@ -308,7 +326,7 @@ void updateImageLocations()
     }
     else
     {
-      imageFallSpeed = 2; 
+      imageFallSpeed = initialImageFallSpeed; 
     }
 }
 
@@ -331,7 +349,6 @@ public void handleMouseClickedForImages()
   }
 }
 
-
 private float startX;
 private float startY;
 private float imageX;
@@ -339,30 +356,61 @@ private float imageY;
 private float rowGap;
 private float colGap;
 private float areaCheck;
+private Boolean refreshCollectedImages = true;
+PImage prerenderedCollection;
 public void drawCollectedImages() {
-  if (collectedImages.size() > 0) {
-    startX = collectedImageAreaX + 5;
-    startY = collectedImageAreaY + collectedImageTitleHeight + 5;
-    imageX = startX;
-    imageY = startY;
-    rowGap = collectedImageHeight+10;
-    colGap = 20;
+  startX = collectedImageAreaX + 5;
+  startY = collectedImageAreaY + collectedImageTitleHeight + 5;
+  imageX = startX;
+  imageY = startY;
+  rowGap = collectedImageHeight+10;
+  colGap = 20;
+  
+  if (!refreshCollectedImages) {
+    image(prerenderedCollection, (int)collectedImageAreaX, (int)collectedImageAreaY, (int)collectedImageAreaWidth, (int)collectedImageAreaHeight);
     
+    if (collectedImages.size() > 0) {
+      for (int i = 0; i < collectedImages.size(); i++) {
+        img = collectedImages.getImage(i);
+        areaCheck = (i == collectedImages.size()-1 || (imageX+colGap > collectedImageAreaX + (collectedImageAreaWidth - collectedImageWidth)) ? collectedImageWidth : colGap);
+        if (overRect(imageX, imageY, areaCheck, collectedImageHeight)) {
+          image(img.getImg(), startX, startY, collectedImageAreaHeight*.9, collectedImageAreaHeight*.9);
+          break;
+        } else {
+          imageX += colGap;
+          if (imageX > collectedImageAreaX + (collectedImageAreaWidth - collectedImageWidth)) {
+            imageX = startX;
+            imageY += rowGap;
+          } 
+        }
+      }
+    }
+  }
+  else if (collectedImages.size() > 0) {
+    Boolean anyImageIsZoomed = false;
     for (int i = 0; i < collectedImages.size(); i++) {
       img = collectedImages.getImage(i);
-      areaCheck = (i == collectedImages.size()-1 ? collectedImageWidth : colGap);
-      if (overRect(imageX, imageY, areaCheck, collectedImageAreaHeight)) {
+      areaCheck = (i == collectedImages.size()-1 || (imageX+colGap > collectedImageAreaX + (collectedImageAreaWidth - collectedImageWidth)) ? collectedImageWidth : colGap);
+      
+      if (overRect(imageX, imageY, areaCheck, collectedImageHeight)) {
         image(img.getImg(), startX, startY, collectedImageAreaHeight*.9, collectedImageAreaHeight*.9);
+        anyImageIsZoomed = true;
         break;
+      } else {
+        image(img.getImg(), imageX, imageY, collectedImageWidth, collectedImageHeight);
+        
+        imageX += colGap;
+        
+        if (imageX > collectedImageAreaX + (collectedImageAreaWidth - collectedImageWidth)) {
+          imageX = startX;
+          imageY += rowGap;
+        }
       }
-      image(img.getImg(), imageX, imageY, collectedImageWidth, collectedImageHeight);
-      
-      imageX += colGap;
-      
-      if (imageX > collectedImageAreaX + (collectedImageAreaWidth - collectedImageWidth)) {
-        imageX = startX;
-        imageY += rowGap;
-      }
+    }
+    if (!anyImageIsZoomed)
+    {
+      prerenderedCollection = get((int)collectedImageAreaX, (int)collectedImageAreaY, (int)collectedImageAreaWidth, (int)collectedImageAreaHeight);
+      refreshCollectedImages = false;
     }
   }
 }

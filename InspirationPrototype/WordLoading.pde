@@ -13,23 +13,19 @@ private static final String url = "https://api.datamuse.com/words";
 private static final String randomURL = "http://randomword.setgetgo.com/get.php";
 
 public void updateWordRetrieval() {
-  String random = getRandomWord();
   if (collectedWords.size() != 0) {
     for (String collected : collectedWords) {
       if (!similarWords.containsKey(collected)) {
         StringList similar = getWordsSimilarTo(collected);
-        if (similar.size() != 0) {
-          similarWords.put(collected, similar);
-        }
+        similarWords.put(collected, similar);
       } 
       if (!oppositeWords.containsKey(collected)) {
-        StringList opposite = getOppositeWords(collected);
-        if (opposite.size() != 0) {
-          oppositeWords.put(collected, opposite);
-        }
+        StringList opposite = getOppositeWords(collected, true);
+        oppositeWords.put(collected, opposite);
       }
     }
   }
+  String random = getRandomWord();
   if (!randomWords.hasValue(random)) {
     randomWords.append(random);
   }
@@ -38,17 +34,18 @@ public void updateWordRetrieval() {
 
 public StringList getWordsSimilarTo(String word)
 {
-  word = word.replaceAll("[^a-zA-Z]","").toLowerCase();
+  word = word.replaceAll("\\s","+");
   StringList list = new StringList();
   GetRequest get = new GetRequest(url + "?ml=" + word);
   get.send();
 
   String response = get.getContent();
   JSONArray jsonArray = JSONArray.parse(response);
-
+  JSONObject json;
+  String currentWord;
   for (int i = 0; i < jsonArray.size(); i++) {
-    JSONObject json = jsonArray.getJSONObject(i); 
-    String currentWord = json.getString("word").replaceAll("[^a-zA-Z]","").toLowerCase();
+    json = jsonArray.getJSONObject(i); 
+    currentWord = json.getString("word");
     if (!list.hasValue(currentWord)) {
       list.append(currentWord);
     }
@@ -62,9 +59,9 @@ public String getRandomWord() {
   return get.getContent();
 }
 
-public StringList getOppositeWords(String word)
+public StringList getOppositeWords(String word, Boolean tryHard)
 {
-  word = word.replaceAll("[^a-zA-Z]","").toLowerCase();
+  word = word.replaceAll("\\s","+");
   StringList returnList = new StringList();
 
   GetRequest get = new GetRequest(url + "?rel_ant=" + word);
@@ -72,11 +69,35 @@ public StringList getOppositeWords(String word)
 
   String response = get.getContent();
   JSONArray jsonArray = JSONArray.parse(response);
-
+  JSONObject json;
+  String currentWord;
   for (int i = 0; i < jsonArray.size(); i++) {
-    JSONObject json = jsonArray.getJSONObject(i); 
-    String currentWord = json.getString("word").replaceAll("[^a-zA-Z]","").toLowerCase();
+    json = jsonArray.getJSONObject(i); 
+    currentWord = json.getString("word").replaceAll("[^a-zA-Z]","").toLowerCase();
     returnList.append(currentWord);
+  }
+  
+  if (tryHard && returnList.size() == 0)
+  {
+    StringList synonymList = new StringList();
+    get = new GetRequest(url + "?max=5&rel_syn=" + word );
+    get.send();
+
+    response = get.getContent();
+    jsonArray = JSONArray.parse(response);
+
+    for (int i = 0; i < jsonArray.size(); i++) {
+      json = jsonArray.getJSONObject(i); 
+      currentWord = json.getString("word").replaceAll("[^a-zA-Z]","").toLowerCase();
+      synonymList.append(currentWord);
+    }
+    if (synonymList.size() > 0)
+    {
+        for (String synonym : synonymList) {
+          returnList = getOppositeWords(synonym, false);
+          if (returnList.size() > 0) break;
+        }
+    }
   }
   return returnList;
 }
@@ -152,6 +173,7 @@ public void addOppositeWord() {
 
       if (words.size() != 0) {
         String word = words.remove((int)random(words.size()));
+        if (oppositeKeyword == null) oppositeKeyword = word;
         oppositeWords.put(randomKey, words);
         onSreenWords.put(word, new float[]{wordOppositeAppearX, wordAppearY});
         if (words.size() == 0) {
@@ -164,10 +186,11 @@ public void addOppositeWord() {
 
 public String getClickedWord(int x, int y) {
   int textSize = 25;
+  int wordX, wordY;
   textSize(textSize);
   for (String word : onSreenWords.keySet()) {
-    int wordX = (int)onSreenWords.get(word)[0];
-    int wordY = (int)onSreenWords.get(word)[1];
+    wordX = (int)onSreenWords.get(word)[0];
+    wordY = (int)onSreenWords.get(word)[1];
     if (wordX <= x && (wordX + textWidth(word)) >= x && (wordY-textSize) <= y && wordY >= y) {
       return word;
     }
@@ -181,6 +204,7 @@ public void handleMouseClickedForWords() {
     if (clicked != null)  {
       collectedWords.append(clicked);
       onSreenWords.remove(clicked);
+      thread("updateKeywords");
     }
   }
 }

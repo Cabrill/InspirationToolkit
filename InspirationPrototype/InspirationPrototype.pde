@@ -15,27 +15,22 @@ PoemList collectedPoems;
 
 HashMap<String, float[]> onSreenWords = new HashMap();
 
-KeywordType currentUpdatingKeyword = KeywordType.Similar;
-
 Boolean hasEnteredStartingWord;
 
 //Temporary hard-codedkeywords
-String similarKeyword = "Fire";
-String randomKeyword = "Random";
-String oppositeKeyword = "Ice";
+String similarKeyword;
+String randomKeyword;
+String oppositeKeyword;
 
 int time;
 int wait = 5000;
 int timeWord;
 int waitWordDraw = 1000;
 
-int imageFallSpeed = 2;
-
 public void setup() {
   fullScreen();
   chooseCurrentType = KeywordType.Similar;
   initializeGUI();
-  initializeImageLoader();
   time = millis();
   timeWord = millis();
   hasEnteredStartingWord = false;
@@ -60,24 +55,43 @@ public void draw() {
     drawCollectedImages();
     drawCollectedWords();
     drawCollectedPoems();
-    if (isRefreshing== false) {
-      updateKeywords();
+    if (!isRefreshing) {
+      thread("updateKeywords");
     }
   }
 }
 
-private void updateKeywords() {
+public void updateKeywords() {
   if (collectedWords.size() != 0) {
+    println("Updating keywords");
     int randomChoice = (int)random(0, collectedWords.size());
-    similarKeyword = collectedWords.get(randomChoice);
+    String chosenWord = collectedWords.get(randomChoice);
+    
+    StringList similarWordList = similarWords.get(chosenWord);
+    if (similarWordList != null && similarWordList.size() > 0) {
+        randomChoice = (int)random(0, similarWordList.size());
+        similarKeyword = similarWordList.get(randomChoice);
+      } else {
+       similarKeyword = chosenWord; 
+      }
+      
     StringList oppositeWordList = oppositeWords.get(similarKeyword);
+    if ((oppositeWordList == null || oppositeWordList.size() == 0) &&  oppositeWords.keySet().size() > 0)
+    {
+       ArrayList<String> keys = new ArrayList<String>(oppositeWords.keySet());
+       String randomKey = keys.get((int)random(keys.size()));
+       oppositeWordList = oppositeWords.get(randomKey);
+    }
     if (oppositeWordList != null && oppositeWordList.size() > 0) {
       randomChoice = (int)random(0, oppositeWordList.size());
       oppositeKeyword = oppositeWordList.get(randomChoice);
-    }
+    } 
+
     if (randomWords != null && randomWords.size() > 0) {
       randomChoice = (int)random(0, randomWords.size());
       randomKeyword = randomWords.get(randomChoice);
+    } else {
+       randomKeyword = getRandomWord();
     }
     notifyImagesThatKeywordsChanged();
   }
@@ -100,7 +114,9 @@ void keyPressed() {
       {
         similarKeyword = partiallyEnteredWord;
         collectedWords.append(similarKeyword);
-        thread("fetchData");
+        updateWordRetrieval();
+        updateKeywords();
+        initializeImageLoader();
         hasEnteredStartingWord = true;
       }
     } // ENTER

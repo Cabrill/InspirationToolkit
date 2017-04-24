@@ -109,13 +109,12 @@ public void drawDebugText() {
   text("Random Keyword: " + randomKeyword, width/2, height-80);
   text("Opposite Keyword: " + oppositeKeyword, width/2, height-60);
 
+  text("currentRetrievingKeyword:" + currentRetrievingKeyword, collectedImageTitleX + collectedWordTitleWidth - 150, collectedWordTitleY - 120);
+  text("isRetrieving:" + isRetrieving, collectedImageTitleX + collectedWordTitleWidth - 150, collectedWordTitleY - 100);
+  text("isRefreshing:" + isRefreshing, collectedImageTitleX + collectedWordTitleWidth - 150, collectedWordTitleY - 80);
   text("Similar Image Count:" + (similarImages == null ? 0 : similarImages.size()), collectedImageTitleX + collectedWordTitleWidth - 150, collectedWordTitleY - 60);
   text("Random Image Count:" + (randomImages == null ? 0 : randomImages.size()), collectedImageTitleX + collectedWordTitleWidth - 150, collectedWordTitleY - 40);
   text("Opposite Image Count:" + (oppositeImages == null ? 0 : oppositeImages.size()), collectedImageTitleX + collectedWordTitleWidth - 150, collectedWordTitleY - 20);
-  if (debugTimer > 0)
-  {
-    text("Debug timer: " + debugTimer, width/2, height-40);
-  }
 }
 
 public void drawUI() {
@@ -148,15 +147,15 @@ public void drawFullUI() {
   textSize(32);
   //poemTitleBar
   image(wordFrame, poemTitleBarX, poemTitleBarY, poemTitleBarWidth, poemTitleBarHeight);
-  text("Poem", poemTitleBarX + poemTitleBarWidth*0.4, poemTitleBarY + poemTitleBarHeight * 0.75);
+  text("Poem", poemTitleBarX + poemTitleBarWidth*0.42, poemTitleBarY + poemTitleBarHeight * 0.75);
 
   //collectedImageTitle
   image(wordFrame, collectedImageTitleX, collectedImageTitleY, collectedImageTitleWidth, collectedImageTitleHeight);
-  text("Collected Images", collectedImageTitleX + collectedImageTitleWidth/4, collectedImageTitleY + collectedImageTitleHeight * 0.75);
+  text("Collected Images", collectedImageTitleX + collectedImageTitleWidth/2.8, collectedImageTitleY + collectedImageTitleHeight * 0.7);
 
   //collectednWordTitle
   image(wordFrame, collectedWordTitleX, collectedWordTitleY, collectedWordTitleWidth, collectedWordTitleHeight);
-  text("Collected Words", collectedWordTitleX + (collectedWordTitleWidth/6), collectedWordTitleY + (collectedWordTitleHeight*0.75));
+  text("Collected Words", collectedWordTitleX + (collectedWordTitleWidth/3.5), collectedWordTitleY + (collectedWordTitleHeight*0.7));
 }
 
 private void setupUICoordinates() {
