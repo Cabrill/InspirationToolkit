@@ -207,6 +207,40 @@ public void chooseAnyClickedImage(ArrayList<OnScreenImage> imageList)
   }
 }
 
+private void removeAnyClickedImage()
+{
+  Image imageToRemove = null;
+  startX = collectedImageAreaX + 5;
+  startY = collectedImageAreaY + collectedImageTitleHeight + 5;
+  imageX = startX;
+  imageY = startY;
+  rowGap = collectedImageHeight+10;
+  colGap = 20;
+  for (int i = 0; i < collectedImages.size(); i++) {
+    areaCheck = (i == collectedImages.size()-1 || (imageX+colGap > collectedImageAreaX + (collectedImageAreaWidth - collectedImageWidth)) ? collectedImageWidth : colGap);
+    
+    if (overRect(imageX, imageY, areaCheck, collectedImageHeight)) {
+      imageToRemove = img;
+      break;
+    } 
+  }
+  if (imageToRemove != null)
+  {
+    Image img;
+    ImageList newImages = new ImageList();
+    for (int i = 0; i < collectedImages.size(); i++)
+    {
+      img = collectedImages.getImage(i);
+      if (img != imageToRemove)
+      {
+        newImages.addImage(img);
+      }
+    }
+    collectedImages = newImages;
+    refreshCollectedImages = true;
+  }
+}
+
 private void addImageToCollection(OnScreenImage onScreenImage)
 {
   collectedImages.addImage(onScreenImage.getImage());
@@ -332,20 +366,24 @@ void updateImageLocations()
 
 public void handleMouseClickedForImages()
 {
-  boolean similarZoomed = anyImageIsZoomed(onScreenSimilarImages);
-  boolean randomZoomed = anyImageIsZoomed(onScreenRandomImages);
-  boolean oppositeZoomed = anyImageIsZoomed(onScreenOppositeImages);
-  if (!similarZoomed && !randomZoomed && !oppositeZoomed)
-  {
-    chooseAnyClickedImage(onScreenSimilarImages);
-    chooseAnyClickedImage(onScreenRandomImages);
-    chooseAnyClickedImage(onScreenOppositeImages);
-  }
-  else
-  {
-    if (similarZoomed) chooseAnyClickedImage(onScreenSimilarImages);
-    if (randomZoomed) chooseAnyClickedImage(onScreenRandomImages);
-    if (oppositeZoomed) chooseAnyClickedImage(onScreenOppositeImages);
+  if (mouseButton == RIGHT && collectedImages.size() > 0) {
+    removeAnyClickedImage();
+  } else {
+    boolean similarZoomed = anyImageIsZoomed(onScreenSimilarImages);
+    boolean randomZoomed = anyImageIsZoomed(onScreenRandomImages);
+    boolean oppositeZoomed = anyImageIsZoomed(onScreenOppositeImages);
+    if (!similarZoomed && !randomZoomed && !oppositeZoomed)
+    {
+      chooseAnyClickedImage(onScreenSimilarImages);
+      chooseAnyClickedImage(onScreenRandomImages);
+      chooseAnyClickedImage(onScreenOppositeImages);
+    }
+    else
+    {
+      if (similarZoomed) chooseAnyClickedImage(onScreenSimilarImages);
+      if (randomZoomed) chooseAnyClickedImage(onScreenRandomImages);
+      if (oppositeZoomed) chooseAnyClickedImage(onScreenOppositeImages);
+    }
   }
 }
 

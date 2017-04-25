@@ -143,7 +143,7 @@ void drawCollectedWords() {
   float wordY = startY;
 
   textSize(24);
-  for (int i = 0; i < collectedWords.size(); i++) {
+  for (int i = 0; i < collectedWords.size()-1; i++) {
     text(collectedWords.get(i), wordX, wordY);
     wordY += rowGap;
     if (wordY >= (collectedWordAreaY + collectedWordAreaHeight)-rowGap) {
