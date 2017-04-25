@@ -135,8 +135,9 @@ void fetchData() {
 }
 
 void drawCollectedWords() {
+  int startIdx = 0;
   int rowGap = 25;
-  int colGap = 50;
+  float colGap = 50;
   float startX = collectedWordAreaX;
   float startY = collectedWordAreaY;
   float wordX = startX;
@@ -147,8 +148,10 @@ void drawCollectedWords() {
     text(collectedWords.get(i), wordX, wordY);
     wordY += rowGap;
     if (wordY >= (collectedWordAreaY + collectedWordAreaHeight)-rowGap) {
+      colGap = getLongestCollectedWord(startIdx, i);
       wordY = startY;
       wordX += colGap;
+      startIdx = i+1;
     }
   }
 }
