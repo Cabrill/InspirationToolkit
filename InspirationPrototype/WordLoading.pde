@@ -199,12 +199,37 @@ public String getClickedWord(int x, int y) {
 }
 
 public void handleMouseClickedForWords() {
-  if (mouseX >= wordSimilarAppearX && mouseY >= wordAppearY && mouseY <= imageDisappearY)  {
-    String clicked = getClickedWord(mouseX, mouseY); 
-    if (clicked != null)  {
-      collectedWords.append(clicked);
-      onSreenWords.remove(clicked);
-      thread("updateKeywords");
+  if (mouseButton == RIGHT) {
+    int textSize = 24;
+    int rowGap = 25;
+    int colGap = 50;
+    float startX = collectedWordAreaX;
+    float startY = collectedWordAreaY;
+    float wordX = startX;
+    float wordY = startY;
+    String word;
+  
+    textSize(textSize);
+    for (int i = 0; i < collectedWords.size()-1; i++) {
+      word = collectedWords.get(i);
+      
+      if (wordX <= mouseX && (wordX + textWidth(word)) >= mouseX && (wordY-textSize) <= mouseY && wordY >= mouseY) {
+        collectedWords.remove(i);
+        break;
+      }
+      
+      wordY += rowGap;
+      if (wordY >= (collectedWordAreaY + collectedWordAreaHeight)-rowGap) {
+        wordY = startY;
+        wordX += colGap;
+      }
     }
+  } else if (mouseX >= wordSimilarAppearX && mouseY >= wordAppearY && mouseY <= imageDisappearY)  {
+      String clicked = getClickedWord(mouseX, mouseY); 
+      if (clicked != null)  {
+        collectedWords.append(clicked);
+        onSreenWords.remove(clicked);
+        thread("updateKeywords");
+      }
   }
 }
