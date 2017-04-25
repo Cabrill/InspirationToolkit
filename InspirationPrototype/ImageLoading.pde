@@ -36,7 +36,7 @@ private OnScreenImage osi;
 private ArrayList<OnScreenImage> OSI;
 int loadStartTime;
 int timeOut = 3;
-int initialImageFallSpeed = 4;
+int initialImageFallSpeed = 2;
 int imageFallSpeed = initialImageFallSpeed;
 
 public void initializeImageLoader()
