@@ -24,6 +24,7 @@ KeywordType currentRetrievingKeyword = KeywordType.Similar;
 KeywordType currentUpdatingKeyword = KeywordType.Similar;
 Boolean isRetrieving;
 Boolean isRefreshing = true;
+Boolean hasTriedSwitching;
 
 ImageList similarImages;
 ImageList randomImages;
@@ -57,29 +58,37 @@ public void initializeImageLoader()
   similarImages = retrieveImages(similarKeyword);
 }
 
-public void updateImageRetrieval()
-{
-  if (isRefreshing && isRetrieving)
-  {
+public void updateImageRetrieval() {
+  if (isRefreshing && isRetrieving) {
       ImageList retrievalList = null;
-      switch (currentRetrievingKeyword)
-      {
+      switch (currentRetrievingKeyword) {
         case Similar: retrievalList = similarImages;break;
         case Random: retrievalList = randomImages; break;
         case Opposite: retrievalList = oppositeImages; break;
       } 
       //Once a list begins receiving images, it will continue until it hits 50 so we just monitor until it hits 1
-     if (retrievalList != null && retrievalList.size() >= 1)
-     {
+     if (retrievalList != null && retrievalList.size() >= 1) {
+         hasTriedSwitching = false;
          stopLoading();
          currentRetrievingKeyword = nextKeywordType(currentRetrievingKeyword);
          
          //If we completed all three (Similar/Random/Opposite) and are back to Similar, then stop refreshing for now.
          isRefreshing = (currentRetrievingKeyword == KeywordType.Similar ? false : true); 
      } 
-     else if (millis() - loadStartTime > timeOut)
-     {
-       
+     else if (millis() - loadStartTime > timeOut) {
+       if (hasTriedSwitching) {
+         stopLoading();
+         currentRetrievingKeyword = nextKeywordType(currentRetrievingKeyword);
+         isRefreshing = (currentRetrievingKeyword == KeywordType.Similar ? false : true); 
+       } else {
+         stopLoading();
+         
+         if (loader == flickrLoader) {
+            loader = tumblrLoader; 
+         } else if (loader == tumblrLoader) {
+            loader = flickrLoader; 
+         }
+       }
      }
   }
     
