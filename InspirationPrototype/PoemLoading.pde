@@ -100,7 +100,7 @@ void drawCollectedPoems() {
     float poemY = topLimit;
 
     if (scrollEnabled && overRect(poemAreaX, poemAreaY, poemAreaWidth, poemAreaHeight)) {
-      poemScroll += 2;
+      poemScroll += 0.5;
     }
     poemY -= poemScroll;
   

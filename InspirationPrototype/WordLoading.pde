@@ -110,7 +110,7 @@ public void updateWordLocations() {
     if ((onSreenWords.get(word)[1] + 1) > imageDisappearY) {
       deletable.append(word);
     } else { 
-      onSreenWords.put(word, new float[]{onSreenWords.get(word)[0], onSreenWords.get(word)[1] + 1});
+      onSreenWords.put(word, new float[]{onSreenWords.get(word)[0], onSreenWords.get(word)[1] + 0.5});
     }
   }
   for (String del : deletable) {
