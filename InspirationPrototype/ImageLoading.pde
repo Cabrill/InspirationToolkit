@@ -74,12 +74,12 @@ public void updateImageRetrieval() {
          
          //If we completed all three (Similar/Random/Opposite) and are back to Similar, then stop refreshing for now.
          isRefreshing = (currentRetrievingKeyword == KeywordType.Similar ? false : true); 
-     } 
-     else if (millis() - loadStartTime > timeOut) {
+     }  else if (millis() - loadStartTime > timeOut) {
        if (hasTriedSwitching) {
          stopLoading();
          currentRetrievingKeyword = nextKeywordType(currentRetrievingKeyword);
          isRefreshing = (currentRetrievingKeyword == KeywordType.Similar ? false : true); 
+         hasTriedSwitching = false;
        } else {
          stopLoading();
          
@@ -88,6 +88,7 @@ public void updateImageRetrieval() {
          } else if (loader == tumblrLoader) {
             loader = flickrLoader; 
          }
+         hasTriedSwitching = true;
        }
      }
   }
