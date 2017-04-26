@@ -211,7 +211,7 @@ public void handleMouseClickedForWords() {
     String word;
   
     textSize(textSize);
-    for (int i = 0; i < collectedWords.size()-1; i++) {
+    for (int i = 0; i < collectedWords.size(); i++) {
       word = collectedWords.get(i);
       
       if (wordX <= mouseX && (wordX + textWidth(word)) >= mouseX && (wordY-textSize) <= mouseY && wordY >= mouseY) {
