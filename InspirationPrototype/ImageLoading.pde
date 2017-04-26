@@ -1,12 +1,18 @@
 import at.mukprojects.imageloader.*;
 import at.mukprojects.imageloader.file.*;
 import at.mukprojects.imageloader.flickr.*;
+import at.mukprojects.imageloader.tumblr.*;
 import at.mukprojects.imageloader.image.*;
 
-//API info tied to cabrill@hotmail.com
+//Flickr API info tied to cabrill@hotmail.com
 //https://www.flickr.com/services/apps/72157679930482211/key
 String apiKey = "974dd25b0edd998bcce9bc2127ebe42c";
 String apiSecret = "c5f08b40712e9b20";
+
+//Tumblr API info tied to cabrill@gmail.com
+//https://www.tumblr.com/oauth/edit/286720
+String tumblrApiKey = "pSN8Eq1bzc8Sx0fPaeIMbAFKY323zUlbEY9V83dHb0CRzaVpK7";
+String tumblrSecret = "qbrnA54BvKA4Jrqd9ogmycyO8rtuesSj4MoivHfRC3bbwwvrOG";  
 ///
 
 //Documentation found at:
@@ -27,6 +33,8 @@ ArrayList<OnScreenImage> onScreenSimilarImages = new ArrayList<OnScreenImage>();
 ArrayList<OnScreenImage> onScreenRandomImages = new ArrayList<OnScreenImage>();
 ArrayList<OnScreenImage> onScreenOppositeImages = new ArrayList<OnScreenImage>();
 
+ImageLoader tumblrLoader;
+ImageLoader flickrLoader;
 ImageLoader loader;
 
 //Declaration of local variables for reuse
@@ -35,13 +43,17 @@ private PImage pimg;
 private OnScreenImage osi;
 private ArrayList<OnScreenImage> OSI;
 int loadStartTime;
-int timeOut = 3;
+int timeOut = 5000;
 int initialImageFallSpeed = 1;
 int imageFallSpeed = initialImageFallSpeed;
 
 public void initializeImageLoader()
 {
-  loader = new FlickrLoader(this, apiKey, apiSecret);
+  //loader = new GiphyLoader(this, "dc6zaTOxFJmzC");
+  flickrLoader = new FlickrLoader(this, apiKey, apiSecret);
+  tumblrLoader = new TumblrImageLoader(this, tumblrApiKey, tumblrSecret);
+  loader = flickrLoader;
+  
   similarImages = retrieveImages(similarKeyword);
 }
 
@@ -57,7 +69,7 @@ public void updateImageRetrieval()
         case Opposite: retrievalList = oppositeImages; break;
       } 
       //Once a list begins receiving images, it will continue until it hits 50 so we just monitor until it hits 1
-     if (millis() - loadStartTime > timeOut || (retrievalList != null && retrievalList.size() >= 1))
+     if (retrievalList != null && retrievalList.size() >= 1)
      {
          stopLoading();
          currentRetrievingKeyword = nextKeywordType(currentRetrievingKeyword);
@@ -65,6 +77,10 @@ public void updateImageRetrieval()
          //If we completed all three (Similar/Random/Opposite) and are back to Similar, then stop refreshing for now.
          isRefreshing = (currentRetrievingKeyword == KeywordType.Similar ? false : true); 
      } 
+     else if (millis() - loadStartTime > timeOut)
+     {
+       
+     }
   }
     
   if (isRefreshing && !isRetrieving)
@@ -90,7 +106,6 @@ public void updateImageRetrieval()
 
 public void notifyImagesThatKeywordsChanged()
 {
-    loadStartTime = millis();
     isRefreshing = true;
     isRetrieving = false;
     currentRetrievingKeyword = KeywordType.Similar;
@@ -104,6 +119,7 @@ private void stopLoading()
 
 private ImageList retrieveImages(String keyword)
 {
+  loadStartTime = millis();
   println("Retrieving images for word: " + keyword);
   isRetrieving = true;
   return loader.start(keyword, false, timeOutSeconds * 1000);
