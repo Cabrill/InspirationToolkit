@@ -392,9 +392,10 @@ void updateImageLocations()
 
 public void handleMouseClickedForImages()
 {
-  if (mouseButton == RIGHT && collectedImages.size() > 0) {
+  if (overRect(collectedImageAreaX, collectedImageAreaY, collectedImageAreaWidth, collectedImageAreaHeight) && 
+      collectedImages.size() > 0) {
     removeAnyClickedImage();
-  } else {
+  } else if (overRect(imageSimilarAppearX, imageAppearY, collectedImageAreaWidth, collectedImageAreaY)){
     boolean similarZoomed = anyImageIsZoomed(onScreenSimilarImages);
     boolean randomZoomed = anyImageIsZoomed(onScreenRandomImages);
     boolean oppositeZoomed = anyImageIsZoomed(onScreenOppositeImages);

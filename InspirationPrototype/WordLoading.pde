@@ -199,9 +199,9 @@ public String getClickedWord(int x, int y) {
 }
 
 public void handleMouseClickedForWords() {
-  if (mouseButton == RIGHT) {
+  int textSize = 24;
+  if (overRect(collectedWordAreaX, collectedWordAreaY-textSize, collectedWordAreaWidth, collectedWordAreaHeight+textSize)) {
     int startIdx = 0;
-    int textSize = 24;
     int rowGap = 25;
     float colGap = 50;
     float startX = collectedWordAreaX;
