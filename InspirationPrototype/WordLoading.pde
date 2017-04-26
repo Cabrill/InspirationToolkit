@@ -200,7 +200,14 @@ public String getClickedWord(int x, int y) {
 
 public void handleMouseClickedForWords() {
   int textSize = 24;
-  if (overRect(collectedWordAreaX, collectedWordAreaY-textSize, collectedWordAreaWidth, collectedWordAreaHeight+textSize)) {
+if (mouseX >= wordSimilarAppearX && mouseY >= wordAppearY && mouseY <= imageDisappearY)  {
+    String clicked = getClickedWord(mouseX, mouseY); 
+    if (clicked != null)  {
+      collectedWords.append(clicked);
+      onSreenWords.remove(clicked);
+      thread("updateKeywords");
+    }
+} else if (overRect(collectedWordAreaX, collectedWordAreaY-textSize, collectedWordAreaWidth, collectedWordAreaHeight+textSize)) {
     int startIdx = 0;
     int rowGap = 25;
     float colGap = 50;
@@ -227,14 +234,7 @@ public void handleMouseClickedForWords() {
         startIdx = i+1;
       }
     }
-  } else if (mouseX >= wordSimilarAppearX && mouseY >= wordAppearY && mouseY <= imageDisappearY)  {
-      String clicked = getClickedWord(mouseX, mouseY); 
-      if (clicked != null)  {
-        collectedWords.append(clicked);
-        onSreenWords.remove(clicked);
-        thread("updateKeywords");
-      }
-  }
+  }  
 }
 
 public float getLongestCollectedWord(int startIdx, int endIdx)
