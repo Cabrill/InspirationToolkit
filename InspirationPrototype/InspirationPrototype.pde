@@ -145,6 +145,9 @@ void drawCollectedWords() {
 
   textSize(24);
   for (int i = 0; i < collectedWords.size(); i++) {
+    if (collectedWords.get(i) == null) {
+      return;
+    }
     text(collectedWords.get(i), wordX, wordY);
     wordY += rowGap;
     if (wordY >= (collectedWordAreaY + collectedWordAreaHeight)-rowGap) {
