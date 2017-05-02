@@ -6,6 +6,8 @@ PImage wordFrame;
 PImage prerenderedGUI;
 PImage playImage;
 PImage pauseImage;
+PImage ffImage;
+PImage rwImage;
 
 //GUI coordinates
 float largeAreaHeight;
@@ -50,6 +52,11 @@ float wordTitleBarHeight;
 float wordPausePlayX;
 float wordPausePlayY;
 float wordPausePlayWidthHeight;
+float wordFFX;
+float wordFFY;
+float wordRWX;
+float wordRWY;
+float wordFFRWWidthHeight;
 
 float poemTitleBarX;
 float poemTitleBarY;
@@ -68,6 +75,11 @@ float imageTitleBarHeight;
 float imagePausePlayX;
 float imagePausePlayY;
 float imagePausePlayWidthHeight;
+float imageFFX;
+float imageFFY;
+float imageRWX;
+float imageRWY;
+float imageFFRWWidthHeight;
 
 float imageAppearY;
 float imageDisappearY;
@@ -100,6 +112,8 @@ public void initializeGUI(){
   wordFrame = loadImage("word_frame.png");
   playImage = loadImage("play.png");
   pauseImage = loadImage("pause.png");
+  ffImage = loadImage("ff.png");
+  rwImage = loadImage("rw.png");
   drawFullUI();
   prerenderedGUI = get(0, 0, width, height);
 }
@@ -155,6 +169,30 @@ public void drawUI() {
   } else {
     image(playImage, poemPausePlayX, poemPausePlayY, poemPausePlayWidthHeight, poemPausePlayWidthHeight);
   }
+  
+  if (wordFallSpeed == wordFallMaxSpeed) {
+    tint(100);
+  } 
+  image(ffImage, wordFFX, wordFFY, wordFFRWWidthHeight, wordFFRWWidthHeight);
+  tint(255);
+  
+  if (wordFallSpeed == wordFallMinSpeed) {
+    tint(100);
+  }
+  image(rwImage, wordRWX, wordRWY, wordFFRWWidthHeight, wordFFRWWidthHeight);
+  tint(255);
+  
+  if (imageFallSpeed == imageFallMaxSpeed) {
+    tint(100);
+  } 
+  image(ffImage, imageFFX, imageFFY, imageFFRWWidthHeight, imageFFRWWidthHeight);
+  tint(255);
+  
+  if (imageFallSpeed == imageFallMinSpeed) {
+    tint(100);
+  }
+  image(rwImage, imageRWX, imageRWY, imageFFRWWidthHeight, imageFFRWWidthHeight);
+  tint(255);
 }
 
 public void drawFullUI() {
@@ -213,6 +251,11 @@ private void setupUICoordinates() {
   wordPausePlayWidthHeight = wordTitleBarHeight * 0.7f;
   wordPausePlayX = wordTitleBarX + (wordPausePlayWidthHeight*0.2f);
   wordPausePlayY = wordTitleBarY + (wordPausePlayWidthHeight*0.2f);
+  wordFFX = wordTitleBarX + (0.65 * wordTitleBarWidth);
+  wordFFY = wordPausePlayY;
+  wordRWX = wordTitleBarX + (0.31 * wordTitleBarWidth);;
+  wordRWY = wordPausePlayY;
+  wordFFRWWidthHeight = wordPausePlayWidthHeight;
 
   imageTitleBarX = poemAreaX + poemAreaWidth;
   imageTitleBarY = largeAreaY;
@@ -221,6 +264,11 @@ private void setupUICoordinates() {
   imagePausePlayWidthHeight = imageTitleBarHeight * 0.7f;
   imagePausePlayX = imageTitleBarX + (imagePausePlayWidthHeight*0.2f);
   imagePausePlayY = imageTitleBarY + (imagePausePlayWidthHeight*0.2f);
+  imageFFX = imageTitleBarX + (0.65 * imageTitleBarWidth);
+  imageFFY = imagePausePlayY;
+  imageRWX = imageTitleBarX + (0.31 * imageTitleBarWidth);;
+  imageRWY = imagePausePlayY;
+  imageFFRWWidthHeight = imagePausePlayWidthHeight;
  
   poemTitleBarX = poemAreaX;
   poemTitleBarY = largeAreaY;
@@ -280,5 +328,26 @@ public void handleMouseClickForPausePlay()
     pauseWords = !pauseWords;
   } else if (overRect(poemPausePlayX, poemPausePlayY, poemPausePlayWidthHeight, poemPausePlayWidthHeight)) {
     pausePoems = !pausePoems;
+  }
+}
+
+public void handleMouseClickForFFRW()
+{
+  if (overRect(wordFFX, wordFFY, wordFFRWWidthHeight, wordFFRWWidthHeight)) {
+    wordFallSpeed += 0.1f + (0.1f * wordFallSpeed);
+    wordFallSpeed = min(wordFallSpeed,wordFallMaxSpeed);
+  } else if (overRect(wordRWX, wordRWY, wordFFRWWidthHeight, wordFFRWWidthHeight)) {
+    wordFallSpeed -= 0.1f + (0.1f * wordFallSpeed);
+    wordFallSpeed = max(wordFallSpeed, wordFallMinSpeed);
+  }
+  
+  else if (overRect(imageFFX, imageFFY, imageFFRWWidthHeight, imageFFRWWidthHeight)) {
+    imageFallSpeed += 0.1 + (0.1f * imageFallSpeed);
+    imageFallSpeed = min(imageFallSpeed,wordFallMaxSpeed);
+    initialImageFallSpeed = imageFallSpeed;
+  } else if (overRect(imageRWX, imageRWY, imageFFRWWidthHeight, imageFFRWWidthHeight)) {
+    imageFallSpeed -= 0.1f + (01.f * imageFallSpeed);
+    imageFallSpeed = max(imageFallSpeed, imageFallMinSpeed);
+    initialImageFallSpeed = imageFallSpeed;
   }
 }

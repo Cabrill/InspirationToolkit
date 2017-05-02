@@ -47,8 +47,10 @@ private OnScreenImage osi;
 private ArrayList<OnScreenImage> OSI;
 int loadStartTime;
 int timeOut = 5000;
-float initialImageFallSpeed = 0.6f;
+float initialImageFallSpeed = 0.5f;
 float imageFallSpeed = initialImageFallSpeed;
+float imageFallMaxSpeed = 5f;
+float imageFallMinSpeed = 0.1f;
 
 public void initializeImageLoader()
 {
@@ -110,6 +112,9 @@ public void updateImageRetrieval() {
         break;
       case Opposite:
       if (oppositeKeyword != null) oppositeImages = retrieveImages(oppositeKeyword);
+      else {
+        oppositeKeyword = getRandomOppositeWord();
+      }
       break;
     } 
   }

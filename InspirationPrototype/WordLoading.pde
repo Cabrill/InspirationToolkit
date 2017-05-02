@@ -8,6 +8,8 @@ import http.requests.*;
 Boolean pauseWords = false;
 
 float wordFallSpeed = 0.5f;
+float wordFallMaxSpeed = 5f;
+float wordFallMinSpeed = 0.1f;
 
 public static HashMap<String, StringList> similarWords = new HashMap();
 public static StringList randomWords = new StringList();
@@ -35,6 +37,26 @@ public void updateWordRetrieval() {
   }
 }
 
+public String getRandomOppositeWord()
+{
+  if (oppositeWords.size() > 0) {
+    ArrayList<String> nonEmptyKeys = new ArrayList<String>();
+    ArrayList<String> keys = new ArrayList<String>(oppositeWords.keySet());
+    for (String word : keys) {
+      StringList opposites = oppositeWords.get(word);
+      if (opposites.size() > 0) {
+        nonEmptyKeys.add(word);
+      }
+    }
+    if (nonEmptyKeys.size() > 0) {
+      String randomKey = nonEmptyKeys.get((int)random(nonEmptyKeys.size()));
+      StringList words = oppositeWords.get(randomKey);
+      int randomChoice = (int)random(words.size());
+      return words.get(randomChoice);
+    }
+  }
+  return null;
+}
 
 public StringList getWordsSimilarTo(String word)
 {
@@ -113,7 +135,7 @@ public void updateWordLocations() {
     text(word, onSreenWords.get(word)[0], onSreenWords.get(word)[1]);
     if ((onSreenWords.get(word)[1] + 1) > imageDisappearY) {
       deletable.append(word);
-    } else if (!pauseWords) { 
+    } else if (!pauseWords && !overRect(wordAreaX, wordAppearY, wordAreaWidth, wordAreaHeight)) { 
       onSreenWords.put(word, new float[]{onSreenWords.get(word)[0], onSreenWords.get(word)[1] + wordFallSpeed});
     }
   }
@@ -171,17 +193,29 @@ public void addSimilarWord() {
 public void addOppositeWord() {
   if (canDrawWord()) {
     if (oppositeWords.size() > 0) {
+      ArrayList<String> nonEmptyKeys = new ArrayList<String>();
       ArrayList<String> keys = new ArrayList<String>(oppositeWords.keySet());
-      String randomKey = keys.get((int)random(keys.size()));
-      StringList words = oppositeWords.get(randomKey);
-
-      if (words.size() != 0) {
-        String word = words.remove((int)random(words.size()));
-        if (oppositeKeyword == null) oppositeKeyword = word;
-        oppositeWords.put(randomKey, words);
-        onSreenWords.put(word, new float[]{wordOppositeAppearX, wordAppearY});
-        if (words.size() == 0) {
-          oppositeWords.remove(word);
+      for (String word : keys)
+      {
+        StringList opposites = oppositeWords.get(word);
+        if (opposites.size() > 0)
+        {
+          nonEmptyKeys.add(word);
+        }
+      }
+      if (nonEmptyKeys.size() > 0)
+      {
+        String randomKey = nonEmptyKeys.get((int)random(nonEmptyKeys.size()));
+        StringList words = oppositeWords.get(randomKey);
+  
+        if (words.size() != 0) {
+          String word = words.remove((int)random(words.size()));
+          if (oppositeKeyword == null) oppositeKeyword = word;
+          oppositeWords.put(randomKey, words);
+          onSreenWords.put(word, new float[]{wordOppositeAppearX, wordAppearY});
+          if (words.size() == 0) {
+            oppositeWords.remove(word);
+          }
         }
       }
     }

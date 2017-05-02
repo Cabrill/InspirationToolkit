@@ -25,7 +25,7 @@ String oppositeKeyword;
 int time;
 int wait = 5000;
 int timeWord;
-int waitWordDraw = 1000;
+int waitWordDraw = 100;
 
 public void setup() {
   fullScreen();
@@ -41,7 +41,7 @@ public void draw() {
   if (!hasEnteredStartingWord) {
     drawPromptForStartWord();
   } else {
-    if (millis() - timeWord >= waitWordDraw) {
+    if (millis() - timeWord >= (waitWordDraw/wordFallSpeed)) {
       addWordToOnScreenWords();
       timeWord = millis();
     }
@@ -101,6 +101,7 @@ void mousePressed() {
   handleMouseClickedForWords();
   handleMouseClickedForImages();
   handleMouseClickForPausePlay();
+  handleMouseClickForFFRW();
 }
 
 void mouseWheel(MouseEvent event) {
