@@ -19,25 +19,36 @@ private static final String url = "https://api.datamuse.com/words";
 private static final String randomURL = "http://randomword.setgetgo.com/get.php";
 
 public void updateWordRetrieval() {
+  thread("FetchLotsOfRandomWords");
   if (collectedWords.size() != 0) {
+    StringList opposite, similar;
     for (String collected : collectedWords) {
       if (!similarWords.containsKey(collected)) {
-        StringList similar = getWordsSimilarTo(collected);
+        similar = getWordsSimilarTo(collected);
         similarWords.put(collected, similar);
-      } 
+      }
+      
       if (!oppositeWords.containsKey(collected)) {
-        StringList opposite = getOppositeWords(collected, true);
+        opposite = getOppositeWords(collected);
+        oppositeWords.put(collected, opposite);
+      } else if (oppositeWords.get(collected).size() == 0) {
+        similar = getWordsSimilarTo(collected);
+        String randomSimilar = similar.get((int)random(similar.size()));
+        opposite = getOppositeWords(randomSimilar);
         oppositeWords.put(collected, opposite);
       }
     }
   }
-  for (int i = 0; i < 5; i++)
+}
+
+public void FetchLotsOfRandomWords(){
+  for (int i = 0; i < 10; i++)
   {
     String random = getRandomWord();
     if (!randomWords.hasValue(random)) {
       randomWords.append(random);
     }
-  }
+  } 
 }
 
 public String getRandomOppositeWord()
@@ -55,7 +66,11 @@ public String getRandomOppositeWord()
       String randomKey = nonEmptyKeys.get((int)random(nonEmptyKeys.size()));
       StringList words = oppositeWords.get(randomKey);
       int randomChoice = (int)random(words.size());
-      return words.get(randomChoice);
+      String resultWord = words.get(randomChoice);
+      if (oppositeKeyword == null) {
+        oppositeKeyword = resultWord;
+      }
+      return resultWord;
     }
   }
   return null;
@@ -93,7 +108,7 @@ public String getRandomWord() {
   return newRandomWord;
 }
 
-public StringList getOppositeWords(String word, Boolean tryHard)
+public StringList getOppositeWords(String word)
 {
   word = word.replaceAll("\\s","+");
   StringList returnList = new StringList();
@@ -110,29 +125,7 @@ public StringList getOppositeWords(String word, Boolean tryHard)
     currentWord = json.getString("word").replaceAll("[^a-zA-Z]","").toLowerCase();
     returnList.append(currentWord);
   }
-  
-  if (tryHard && returnList.size() == 0)
-  {
-    StringList synonymList = new StringList();
-    get = new GetRequest(url + "?max=5&rel_syn=" + word );
-    get.send();
 
-    response = get.getContent();
-    jsonArray = JSONArray.parse(response);
-
-    for (int i = 0; i < jsonArray.size(); i++) {
-      json = jsonArray.getJSONObject(i); 
-      currentWord = json.getString("word").replaceAll("[^a-zA-Z]","").toLowerCase();
-      synonymList.append(currentWord);
-    }
-    if (synonymList.size() > 0)
-    {
-        for (String synonym : synonymList) {
-          returnList = getOppositeWords(synonym, false);
-          if (returnList.size() > 0) break;
-        }
-    }
-  }
   return returnList;
 }
 
@@ -269,6 +262,7 @@ public void handleMouseClickedForWords() {
         
         if (wordX <= mouseX && (wordX + textWidth(word)) >= mouseX && (wordY-textSize) <= mouseY && wordY >= mouseY) {
           collectedWords.remove(i);
+          thread("updateKeywords");
           break;
         }
         

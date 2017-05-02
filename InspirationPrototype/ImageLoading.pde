@@ -25,7 +25,6 @@ int timeOutSeconds = 60;
 KeywordType currentRetrievingKeyword = KeywordType.Similar;
 KeywordType currentUpdatingKeyword = KeywordType.Similar;
 Boolean isRetrieving;
-Boolean isRefreshing = true;
 Boolean hasTriedSwitching;
 
 ImageList similarImages;
@@ -46,10 +45,10 @@ private PImage pimg;
 private OnScreenImage osi;
 private ArrayList<OnScreenImage> OSI;
 int loadStartTime;
-int timeOut = 3000;
+int timeOut = 5000;
 float initialImageFallSpeed = 0.5f;
 float imageFallSpeed = initialImageFallSpeed;
-float imageFallMaxSpeed = 5f;
+float imageFallMaxSpeed = 10f;
 float imageFallMinSpeed = 0.1f;
 
 public void initializeImageLoader()
@@ -57,13 +56,14 @@ public void initializeImageLoader()
   //loader = new GiphyLoader(this, "dc6zaTOxFJmzC");
   flickrLoader = new FlickrLoader(this, apiKey, apiSecret);
   tumblrLoader = new TumblrImageLoader(this, tumblrApiKey, tumblrSecret);
-  loader = flickrLoader;
+  loader = tumblrLoader;
   
   similarImages = retrieveImages(similarKeyword);
+  hasTriedSwitching = false;
 }
 
 public void updateImageRetrieval() {
-  if (isRefreshing && isRetrieving) {
+  if (isRetrieving) {
       ImageList retrievalList = null;
       switch (currentRetrievingKeyword) {
         case Similar: retrievalList = similarImages;break;
@@ -72,19 +72,13 @@ public void updateImageRetrieval() {
       } 
       //Once a list begins receiving images, it will continue until it hits 50 so we just monitor until it hits 1
      if (retrievalList != null && retrievalList.size() >= 1) {
-         hasTriedSwitching = false;
-         stopLoading();
-         currentRetrievingKeyword = nextKeywordType(currentRetrievingKeyword);
-         
-         //If we completed all three (Similar/Random/Opposite) and are back to Similar, then stop refreshing for now.
-         isRefreshing = (currentRetrievingKeyword == KeywordType.Similar ? false : true); 
+         switchKeywords();
      }  else if (millis() - loadStartTime > timeOut) {
+       println("Time out elapsed for " + currentRetrievingKeyword);
        if (hasTriedSwitching) {
-         stopLoading();
-         currentRetrievingKeyword = nextKeywordType(currentRetrievingKeyword);
-         isRefreshing = (currentRetrievingKeyword == KeywordType.Similar ? false : true); 
-         hasTriedSwitching = false;
+         switchKeywords();
        } else {
+         println("Trying switch loader for " + currentRetrievingKeyword);
          stopLoading();
          
          if (loader == flickrLoader) {
@@ -92,23 +86,34 @@ public void updateImageRetrieval() {
          } else if (loader == tumblrLoader) {
             loader = flickrLoader; 
          }
+         isRetrieving = false;
          hasTriedSwitching = true;
        }
      }
+     println("Updatedimageretrieval.  Time: " + (millis() - loadStartTime) + "/"+timeOut);
   }
     
-  if (isRefreshing && !isRetrieving)
+  if (!isRetrieving)
   {
     println("Retrieving images for keyword type: " +currentRetrievingKeyword);
     switch (currentRetrievingKeyword)
     {
       case Similar:
-        if (similarKeyword != null) similarImages = retrieveImages(similarKeyword);
-        else similarImages = retrieveImages(getRandomWord());
+        if (similarKeyword != null) similarImages = retrieveImages(similarKeyword); 
+        else  {
+           similarKeyword = collectedWords.get(0);
+           if (similarKeyword != null) {
+             similarImages = retrieveImages(getRandomWord());
+           }
+        }
+        
         break;
       case Random:
         if (randomKeyword != null) randomImages = retrieveImages(randomKeyword);
-        else randomImages = retrieveImages(getRandomWord());
+        else {
+          randomKeyword = getRandomWord();
+          if (randomKeyword != null) randomImages = retrieveImages(randomKeyword); 
+        }
         break;
       case Opposite:
       if (oppositeKeyword != null) oppositeImages = retrieveImages(oppositeKeyword);
@@ -125,11 +130,20 @@ public void updateImageRetrieval() {
   }
 }
 
-public void notifyImagesThatKeywordsChanged()
+private void switchKeywords()
 {
-    isRefreshing = true;
-    isRetrieving = false;
-    currentRetrievingKeyword = KeywordType.Similar;
+  println("Switching keywords!");
+  stopLoading();
+  hasTriedSwitching = false;
+  currentRetrievingKeyword = nextKeywordType(currentRetrievingKeyword);
+   
+  //If we completed all three (Similar/Random/Opposite) and are back to Similar, then choose new words
+  if (currentRetrievingKeyword == KeywordType.Similar && 
+      (similarImages == null || similarImages.size() < 10 ||
+      randomKeyword == null || randomImages.size() < 10 || 
+      oppositeKeyword == null || oppositeImages.size() < 5)) {
+    thread("updateKeywords"); 
+  }
 }
 
 private void stopLoading()

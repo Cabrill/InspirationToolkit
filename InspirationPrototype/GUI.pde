@@ -163,10 +163,9 @@ public void drawDebugText() {
 
   text("currentRetrievingKeyword:" + currentRetrievingKeyword, collectedImageTitleX + collectedWordTitleWidth - 150, collectedWordTitleY - 120);
   text("isRetrieving:" + isRetrieving, collectedImageTitleX + collectedWordTitleWidth - 150, collectedWordTitleY - 100);
-  text("isRefreshing:" + isRefreshing, collectedImageTitleX + collectedWordTitleWidth - 150, collectedWordTitleY - 80);
-  text("Similar Image Count:" + (similarImages == null ? 0 : similarImages.size()), collectedImageTitleX + collectedWordTitleWidth - 150, collectedWordTitleY - 60);
-  text("Random Image Count:" + (randomImages == null ? 0 : randomImages.size()), collectedImageTitleX + collectedWordTitleWidth - 150, collectedWordTitleY - 40);
-  text("Opposite Image Count:" + (oppositeImages == null ? 0 : oppositeImages.size()), collectedImageTitleX + collectedWordTitleWidth - 150, collectedWordTitleY - 20);
+  text("Similar Image Count:" + (similarImages == null ? 0 : similarImages.size()), collectedImageTitleX + collectedWordTitleWidth - 150, collectedWordTitleY - 80);
+  text("Random Image Count:" + (randomImages == null ? 0 : randomImages.size()), collectedImageTitleX + collectedWordTitleWidth - 150, collectedWordTitleY - 60);
+  text("Opposite Image Count:" + (oppositeImages == null ? 0 : oppositeImages.size()), collectedImageTitleX + collectedWordTitleWidth - 150, collectedWordTitleY - 40);
 }
 
 public void drawUI() {
@@ -372,7 +371,7 @@ public void handleMouseClickedForFFRW()
   
   else if (overRect(imageFFX, imageFFY, imageFFRWWidthHeight, imageFFRWWidthHeight)) {
     imageFallSpeed += 0.1 + (0.1f * imageFallSpeed);
-    imageFallSpeed = min(imageFallSpeed,wordFallMaxSpeed);
+    imageFallSpeed = min(imageFallSpeed,imageFallMaxSpeed);
     initialImageFallSpeed = imageFallSpeed;
   } else if (overRect(imageRWX, imageRWY, imageFFRWWidthHeight, imageFFRWWidthHeight)) {
     imageFallSpeed -= 0.1f + (01.f * imageFallSpeed);

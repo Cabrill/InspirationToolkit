@@ -56,17 +56,14 @@ public void changePoem() {
   } else {
     println("retrieving new poems");
     index++;
-    keyword = similarKeyword;
-    searchLines = true;
     thread("getPoems");
     println("retrieved");
   }
 }
 
-String keyword;
-Boolean searchLines;
+Boolean searchLines = true;
 public void getPoems() {
-  keyword = keyword.replaceAll("\\s","+");
+  String keyword = similarKeyword.replaceAll("\\s","+");
   GetRequest get;
   if (searchLines) {
     get = new GetRequest(api + "/lines/" + keyword);
@@ -104,17 +101,34 @@ void loadPoem()
   lines = poem.getJSONArray("lines");
   title = poem.getString("title");
   poemLines = new StringList();
+  String poemLine;
+  int stringMid = 0;
+  int idxOfSpace = 0;
+  
+  textSize(24);
+  
   for (int i = 1; i < lines.size(); i++) {
+    
+    poemLine = lines.getString(i);
+    
+    if (textWidth(poemLine) > poemAreaWidth)
+    {
+      stringMid = poemLine.length() / 2;
+      idxOfSpace = poemLine.indexOf(" ", stringMid);
+      poemLines.append(poemLine.substring(0, idxOfSpace));
+      poemLines.append(poemLine.substring(idxOfSpace));
+    } else {
       poemLines.append(lines.getString(i));
+    }
   }
-  maxScroll = 40 + (15 * poemLines.size()) - poemAreaHeight/2;
+  maxScroll = 40 + (25 * poemLines.size()) - poemAreaHeight/2;
 }
 
 void handlePoemScroll(float scrollAmount)
 {
   if (scrollEnabled)
   {
-    poemScroll += (poemScrollSpeed*2 * scrollAmount);
+    poemScroll += (poemScrollSpeed*10 * scrollAmount);
     poemScroll = max(poemScroll, 0);
     poemScroll = min(poemScroll, maxScroll);
   }
@@ -134,15 +148,15 @@ void drawCollectedPoems() {
     poemY -= poemScroll;
   
     textAlign(CENTER);
-    textSize(20);
+    textSize(32);
     if (poemY + rowGap > poemAppearY + 15) {
       text(title, poemX, poemY, poemAreaWidth, poemAreaHeight);
     }
-    rowGap += 15;
+    rowGap += 40;
   
-    textSize(12);
+    textSize(24);
     for (int i = 1; i < poemLines.size(); i++) {
-      rowGap += 15;
+      rowGap += 25;
 
       if (poemY + rowGap > poemAppearY && poemY + rowGap < poemAreaHeight) {
         text(poemLines.get(i), poemX, poemY + rowGap, poemAreaWidth, poemAreaHeight);

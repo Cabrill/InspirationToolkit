@@ -23,16 +23,15 @@ String similarKeyword;
 String randomKeyword;
 String oppositeKeyword;
 
-int time;
-int wait = 5000;
+int timeSinceLastFetch;
+int wait = 2500;
 int timeWord;
-int waitWordDraw = 100;
+int waitWordDraw = 50;
 
 public void setup() {
   fullScreen();
   chooseCurrentType = KeywordType.Similar;
   initializeGUI();
-  time = millis();
   timeWord = millis();
   hasEnteredStartingWord = false;
   isEnteringNewWord = false;
@@ -47,9 +46,10 @@ public void draw() {
       addWordToOnScreenWords();
       timeWord = millis();
     }
-    if (millis() - time >= wait) {
+    if (millis() - timeSinceLastFetch >= wait) {
+      println("Fetching data");
       thread("fetchData");
-      time = millis();
+      timeSinceLastFetch = millis();
     }
     
     updateImageLocations();
@@ -57,9 +57,6 @@ public void draw() {
     drawCollectedImages();
     drawCollectedWords();
     drawCollectedPoems();
-    if (!isRefreshing) {
-      thread("updateKeywords");
-    }
   }
 }
 
@@ -73,20 +70,22 @@ public void updateKeywords() {
     if (similarWordList != null && similarWordList.size() > 0) {
         randomChoice = (int)random(0, similarWordList.size());
         similarKeyword = similarWordList.get(randomChoice);
-      } else {
+    } else {
        similarKeyword = chosenWord; 
-      }
-      
-    StringList oppositeWordList = oppositeWords.get(similarKeyword);
-    if ((oppositeWordList == null || oppositeWordList.size() == 0) &&  oppositeWords.keySet().size() > 0)
-    {
-       ArrayList<String> keys = new ArrayList<String>(oppositeWords.keySet());
-       String randomKey = keys.get((int)random(keys.size()));
-       oppositeWordList = oppositeWords.get(randomKey);
     }
-    if (oppositeWordList != null && oppositeWordList.size() > 0) {
-      randomChoice = (int)random(0, oppositeWordList.size());
-      oppositeKeyword = oppositeWordList.get(randomChoice);
+      
+    if (oppositeWords != null && oppositeWords.size() > 0) {
+      StringList oppositeWordList = oppositeWords.get(similarKeyword);
+      if (oppositeWordList != null && oppositeWordList.size() > 0) {
+        randomChoice = (int)random(0, oppositeWordList.size());
+        oppositeKeyword = oppositeWordList.get(randomChoice);
+      }
+      else {
+        String newOppositeWord = getRandomOppositeWord();
+        if (newOppositeWord != null && newOppositeWord != "") {
+          oppositeKeyword = newOppositeWord;
+        }
+      }
     } 
 
     if (randomWords != null && randomWords.size() > 0) {
@@ -95,7 +94,6 @@ public void updateKeywords() {
     } else {
        randomKeyword = getRandomWord();
     }
-    notifyImagesThatKeywordsChanged();
   }
 }
 
@@ -115,8 +113,7 @@ void mousePressed() {
 void mouseWheel(MouseEvent event) {
   if (overRect(poemAreaX, poemAreaY, poemAreaWidth, poemAreaHeight))
   {
-    float scrollAmount = event.getCount();
-    handlePoemScroll(scrollAmount);
+    handlePoemScroll( event.getCount());
   }
 }
 
@@ -130,12 +127,21 @@ void keyPressed() {
     } // Letter 
     else if (key==ENTER||key==RETURN) {
       if (partiallyEnteredWord.length() > 0)
-      {
+      {        
         similarKeyword = partiallyEnteredWord;
         collectedWords.append(similarKeyword);
+        
+        if (!hasEnteredStartingWord) {
+          initializeImageLoader();
+          thread("getPoems");
+        }
+        if (isEnteringNewWord){
+          updateKeywords();
+        }
+        
         thread("fetchData");
-        thread("getRandomWord");
-        initializeImageLoader();
+        timeSinceLastFetch = millis();
+        
         hasEnteredStartingWord = true;
         isEnteringNewWord = false;
       } else if (hasEnteredStartingWord) {
@@ -154,9 +160,13 @@ void keyPressed() {
 }
 
 void fetchData() {
+  println("Starting word fetch");
   updateWordRetrieval();
+  println("Starting image fetch");
   updateImageRetrieval();
+  println("Starting poem fetch");
   updatePoemRetrieval();
+  println("Fetch concluded.");
 }
 
 void drawCollectedWords() {
