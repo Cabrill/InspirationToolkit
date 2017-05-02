@@ -103,6 +103,14 @@ void mousePressed() {
   handleMouseClickForPausePlay();
 }
 
+void mouseWheel(MouseEvent event) {
+  if (overRect(poemAreaX, poemAreaY, poemAreaWidth, poemAreaHeight))
+  {
+    float scrollAmount = event.getCount();
+    handlePoemScroll(scrollAmount);
+  }
+}
+
 void keyPressed() {
  if (!hasEnteredStartingWord)
  {

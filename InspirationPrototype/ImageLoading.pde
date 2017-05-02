@@ -110,7 +110,6 @@ public void updateImageRetrieval() {
         break;
       case Opposite:
       if (oppositeKeyword != null) oppositeImages = retrieveImages(oppositeKeyword);
-      else oppositeImages = retrieveImages(getRandomWord());
       break;
     } 
   }

@@ -7,6 +7,8 @@ import http.requests.*;
 
 Boolean pauseWords = false;
 
+float wordFallSpeed = 0.5f;
+
 public static HashMap<String, StringList> similarWords = new HashMap();
 public static StringList randomWords = new StringList();
 public static HashMap<String, StringList>  oppositeWords = new HashMap();
@@ -112,7 +114,7 @@ public void updateWordLocations() {
     if ((onSreenWords.get(word)[1] + 1) > imageDisappearY) {
       deletable.append(word);
     } else if (!pauseWords) { 
-      onSreenWords.put(word, new float[]{onSreenWords.get(word)[0], onSreenWords.get(word)[1] + 0.5});
+      onSreenWords.put(word, new float[]{onSreenWords.get(word)[0], onSreenWords.get(word)[1] + wordFallSpeed});
     }
   }
   for (String del : deletable) {

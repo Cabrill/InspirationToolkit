@@ -13,12 +13,13 @@ import http.requests.*;
 //TODO: scrolling of long poems
 
 Boolean pausePoems = false;
+double poemScrollSpeed = 0.5;
 
 JSONArray similarPoems = new JSONArray();
 StringList currentPoem = new StringList();
 HashMap<String, Boolean> poemsUsed = new HashMap();
 int index = 0;
-double poemScroll = 0;
+float poemScroll = 0;
 boolean scrollEnabled = false;
 
 PoemList randomPoems;
@@ -92,6 +93,17 @@ void loadPoem()
   }
 }
 
+void handlePoemScroll(float scrollAmount)
+{
+  if (scrollEnabled)
+  {
+    float maxScroll = 40 + (15 * poemLines.size()) - poemAreaHeight/2;
+    poemScroll += (poemScrollSpeed*2 * scrollAmount);
+    poemScroll = max(poemScroll, 0);
+    poemScroll = min(poemScroll, maxScroll);
+  }
+}
+
 void drawCollectedPoems() {
   if (similarPoems.size() > index-1 && poemLines != null && poemLines.size() > 0)
   {
@@ -102,8 +114,8 @@ void drawCollectedPoems() {
     float poemY = topLimit;
 
 
-    if (!pausePoems && scrollEnabled && overRect(poemAreaX, poemAreaY, poemAreaWidth, poemAreaHeight)) {
-      poemScroll += 0.5;
+    if (scrollEnabled && !pausePoems && !overRect(poemAreaX, poemAreaY, poemAreaWidth, poemAreaHeight)) {
+      poemScroll += poemScrollSpeed;
     }
     poemY -= poemScroll;
   
