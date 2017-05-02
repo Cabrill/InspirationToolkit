@@ -272,7 +272,7 @@ private void setupUICoordinates() {
   collectedImageWidth = collectedImageHeight;
 }
 
-public void handleMouseClickForPausePla()
+public void handleMouseClickForPausePlay()
 {
   if (overRect(imagePausePlayX, imagePausePlayY, imagePausePlayWidthHeight, imagePausePlayWidthHeight)) {
     pauseImages = !pauseImages;
