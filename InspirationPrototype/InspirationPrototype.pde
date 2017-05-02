@@ -100,12 +100,16 @@ public void updateKeywords() {
 }
 
 void mousePressed() {
-  handleMouseClickedForAddWord();
-  handleMouseClickedForPoem();
-  handleMouseClickedForWords();
-  handleMouseClickedForImages();
-  handleMouseClickedForPausePlay();
-  handleMouseClickedForFFRW();
+  if (hasEnteredStartingWord) {
+    handleMouseClickedForAddWord();
+    handleMouseClickedForPoem();
+    handleMouseClickedForWords();
+    handleMouseClickedForImages();
+    handleMouseClickedForPausePlay();
+    handleMouseClickedForFFRW();
+  } else if (isEnteringNewWord) {
+     isEnteringNewWord = false; 
+  }
 }
 
 void mouseWheel(MouseEvent event) {
@@ -120,7 +124,8 @@ void keyPressed() {
  if (!hasEnteredStartingWord || isEnteringNewWord)
  {
    // what key was it?   ---
-    if ( (key>='a'&&key<='z') || ( key >= 'A'&&key<='Z') || key == ' ') {
+    if ( (key>='a'&&key<='z') || ( key >= 'A'&&key<='Z') 
+    || key == ' ' || key== '\'' || key == '-' ) {
       partiallyEnteredWord+=key; // add this key to our name
     } // Letter 
     else if (key==ENTER||key==RETURN) {

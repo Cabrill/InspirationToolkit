@@ -128,15 +128,30 @@ public void initializeGUI(){
 String partiallyEnteredWord = "";
 public void drawPromptForStartWord()
 {
+  String prompt = "Please enter a starting word/theme: ";
+  
+  if (hasEnteredStartingWord) {
+   prompt = "Enter new word/theme:"; 
+  }
+  
+  stroke(0);
   fill(100,100,100,200);
   rect(0,0,width,height);
   fill(200,200,200,255);
-  rect(width/3, height/3, width/3, height/3);
+  rect(width/4, height/3, width/2, height/3);
   textSize(32);
   fill(0,0,0);
-  text("Please enter a starting word:", (width/3)+5, (height/3)+50);
-  text(partiallyEnteredWord, (width/3)+5, (height/2));
+  textAlign(CENTER);
+  text(prompt, (width/2), (height/3)+50);
+  
+  stroke(255);
+  fill(50,50,255);
+  rect((width/4)+20, (height/2)-40, (width/2)-40, (height/6)-20);
+  
+  fill(255,255,255);
+  text(partiallyEnteredWord, (width/2)+5, (height/2)+25);
   fill(255,255,255,255);
+  textAlign(LEFT);
 }
 
 public void drawDebugText() {
