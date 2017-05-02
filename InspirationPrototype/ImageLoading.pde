@@ -46,7 +46,7 @@ private PImage pimg;
 private OnScreenImage osi;
 private ArrayList<OnScreenImage> OSI;
 int loadStartTime;
-int timeOut = 5000;
+int timeOut = 3000;
 float initialImageFallSpeed = 0.5f;
 float imageFallSpeed = initialImageFallSpeed;
 float imageFallMaxSpeed = 5f;
@@ -114,6 +114,11 @@ public void updateImageRetrieval() {
       if (oppositeKeyword != null) oppositeImages = retrieveImages(oppositeKeyword);
       else {
         oppositeKeyword = getRandomOppositeWord();
+        if (oppositeKeyword != null) {
+           oppositeImages = retrieveImages(oppositeKeyword);
+        } else {
+          currentRetrievingKeyword = nextKeywordType(currentRetrievingKeyword);
+        }
       }
       break;
     } 
