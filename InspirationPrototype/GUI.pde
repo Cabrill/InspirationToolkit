@@ -4,6 +4,8 @@ PImage areaImage;
 PImage typeBar;
 PImage wordFrame;
 PImage prerenderedGUI;
+PImage playImage;
+PImage pauseImage;
 
 //GUI coordinates
 float largeAreaHeight;
@@ -45,15 +47,27 @@ float wordTitleBarY;
 float wordTitleBarWidth;
 float wordTitleBarHeight; 
 
+float wordPausePlayX;
+float wordPausePlayY;
+float wordPausePlayWidthHeight;
+
 float poemTitleBarX;
 float poemTitleBarY;
 float poemTitleBarWidth;
 float poemTitleBarHeight;
 
+float poemPausePlayX;
+float poemPausePlayY;
+float poemPausePlayWidthHeight;
+
 float imageTitleBarX;
 float imageTitleBarY;
 float imageTitleBarWidth;
 float imageTitleBarHeight;
+
+float imagePausePlayX;
+float imagePausePlayY;
+float imagePausePlayWidthHeight;
 
 float imageAppearY;
 float imageDisappearY;
@@ -84,6 +98,8 @@ public void initializeGUI(){
   areaImage = loadImage("area.png");
   typeBar = loadImage("type_bar.png");
   wordFrame = loadImage("word_frame.png");
+  playImage = loadImage("play.png");
+  pauseImage = loadImage("pause.png");
   drawFullUI();
   prerenderedGUI = get(0, 0, width, height);
 }
@@ -121,6 +137,23 @@ public void drawUI() {
   image(prerenderedGUI, 0, 0, displayWidth, displayHeight);
   if (debugEnabled)  {
     drawDebugText();
+  }
+  if (pauseImages) {
+    image(pauseImage, imagePausePlayX, imagePausePlayY, imagePausePlayWidthHeight, imagePausePlayWidthHeight);
+  } else {
+    image(playImage, imagePausePlayX, imagePausePlayY, imagePausePlayWidthHeight, imagePausePlayWidthHeight);
+  }
+  
+  if (pauseWords) {
+    image(pauseImage, wordPausePlayX, wordPausePlayY, wordPausePlayWidthHeight, wordPausePlayWidthHeight);
+  } else {
+    image(playImage, wordPausePlayX, wordPausePlayY, wordPausePlayWidthHeight, wordPausePlayWidthHeight);
+  }
+  
+  if (pausePoems) {
+    image(pauseImage, poemPausePlayX, poemPausePlayY, poemPausePlayWidthHeight, poemPausePlayWidthHeight);
+  } else {
+    image(playImage, poemPausePlayX, poemPausePlayY, poemPausePlayWidthHeight, poemPausePlayWidthHeight);
   }
 }
 
@@ -177,16 +210,25 @@ private void setupUICoordinates() {
   wordTitleBarY = largeAreaY;
   wordTitleBarWidth = wordAreaWidth;
   wordTitleBarHeight = width /32; 
+  wordPausePlayWidthHeight = wordTitleBarHeight * 0.7f;
+  wordPausePlayX = wordTitleBarX + (wordPausePlayWidthHeight*0.2f);
+  wordPausePlayY = wordTitleBarY + (wordPausePlayWidthHeight*0.2f);
 
   imageTitleBarX = poemAreaX + poemAreaWidth;
   imageTitleBarY = largeAreaY;
   imageTitleBarWidth = wordAreaX - (poemAreaX + poemAreaWidth);
   imageTitleBarHeight = wordTitleBarHeight; 
-
+  imagePausePlayWidthHeight = imageTitleBarHeight * 0.7f;
+  imagePausePlayX = imageTitleBarX + (imagePausePlayWidthHeight*0.2f);
+  imagePausePlayY = imageTitleBarY + (imagePausePlayWidthHeight*0.2f);
+ 
   poemTitleBarX = poemAreaX;
   poemTitleBarY = largeAreaY;
   poemTitleBarWidth = poemAreaWidth;
   poemTitleBarHeight = width /32; 
+  poemPausePlayWidthHeight = poemTitleBarHeight * 0.7f;
+  poemPausePlayX = poemTitleBarX + (poemPausePlayWidthHeight*0.2f);
+  poemPausePlayY = poemTitleBarY + (poemPausePlayWidthHeight*0.2f);
 
   collectedWordTitleX = wordAreaX;
   collectedWordTitleY = (wordAreaHeight / 2) + wordTitleBarHeight + largeAreaY;
@@ -228,4 +270,15 @@ private void setupUICoordinates() {
 
   collectedImageHeight = collectedImageAreaWidth / 3;
   collectedImageWidth = collectedImageHeight;
+}
+
+public void handleMouseClickForPausePla()
+{
+  if (overRect(imagePausePlayX, imagePausePlayY, imagePausePlayWidthHeight, imagePausePlayWidthHeight)) {
+    pauseImages = !pauseImages;
+  } else if (overRect(wordPausePlayX, wordPausePlayY, wordPausePlayWidthHeight, wordPausePlayWidthHeight)) {
+    pauseWords = !pauseWords;
+  } else if (overRect(poemPausePlayX, poemPausePlayY, poemPausePlayWidthHeight, poemPausePlayWidthHeight)) {
+    pausePoems = !pausePoems;
+  }
 }

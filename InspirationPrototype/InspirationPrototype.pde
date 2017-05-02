@@ -100,6 +100,7 @@ public void updateKeywords() {
 void mousePressed() {
   handleMouseClickedForWords();
   handleMouseClickedForImages();
+  handleMouseClickForPausePla();
 }
 
 void keyPressed() {

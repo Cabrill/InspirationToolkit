@@ -5,6 +5,8 @@
 //https://github.com/runemadsen/HTTP-Requests-for-Processing
 import http.requests.*;
 
+Boolean pauseWords = false;
+
 public static HashMap<String, StringList> similarWords = new HashMap();
 public static StringList randomWords = new StringList();
 public static HashMap<String, StringList>  oppositeWords = new HashMap();
@@ -109,7 +111,7 @@ public void updateWordLocations() {
     text(word, onSreenWords.get(word)[0], onSreenWords.get(word)[1]);
     if ((onSreenWords.get(word)[1] + 1) > imageDisappearY) {
       deletable.append(word);
-    } else { 
+    } else if (!pauseWords) { 
       onSreenWords.put(word, new float[]{onSreenWords.get(word)[0], onSreenWords.get(word)[1] + 0.5});
     }
   }

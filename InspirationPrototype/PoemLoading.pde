@@ -12,6 +12,8 @@ import http.requests.*;
 
 //TODO: scrolling of long poems
 
+Boolean pausePoems = false;
+
 JSONArray similarPoems = new JSONArray();
 StringList currentPoem = new StringList();
 HashMap<String, Boolean> poemsUsed = new HashMap();
@@ -27,7 +29,7 @@ JSONArray data;
 private static final String api = "http://poetrydb.org";
 
 public void updatePoemRetrieval() {
-  if (overRect(poemAreaX, poemAreaY, poemAreaWidth, poemAreaHeight)) {
+  if (pausePoems || overRect(poemAreaX, poemAreaY, poemAreaWidth, poemAreaHeight)) {
     return;
   } else if (index < similarPoems.size() - 1) {
     index++;
@@ -99,7 +101,8 @@ void drawCollectedPoems() {
     float poemX = poemAreaX;
     float poemY = topLimit;
 
-    if (scrollEnabled && overRect(poemAreaX, poemAreaY, poemAreaWidth, poemAreaHeight)) {
+
+    if (!pausePoems && scrollEnabled && overRect(poemAreaX, poemAreaY, poemAreaWidth, poemAreaHeight)) {
       poemScroll += 0.5;
     }
     poemY -= poemScroll;

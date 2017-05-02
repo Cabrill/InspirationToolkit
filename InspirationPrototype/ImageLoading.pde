@@ -18,6 +18,8 @@ String tumblrSecret = "qbrnA54BvKA4Jrqd9ogmycyO8rtuesSj4MoivHfRC3bbwwvrOG";
 //Documentation found at:
 //https://github.com/keshrath/ImageLoader
 
+Boolean pauseImages = false;
+
 int timeOutSeconds = 60;
 
 KeywordType currentRetrievingKeyword = KeywordType.Similar;
@@ -149,11 +151,13 @@ public float getTopImageY(ArrayList<OnScreenImage> imageList)
 
 public void incrementAllY(ArrayList<OnScreenImage> imageList, float yIncrement)
 {
-  float currentY;
-  for (int i = 0; i < imageList.size(); i++)
-  {
-    currentY = imageList.get(i).getY();
-    imageList.get(i).setY(currentY + yIncrement);
+  if (!pauseImages) {
+    float currentY;
+    for (int i = 0; i < imageList.size(); i++)
+    {
+      currentY = imageList.get(i).getY();
+      imageList.get(i).setY(currentY + yIncrement);
+    }
   }
 }
 
