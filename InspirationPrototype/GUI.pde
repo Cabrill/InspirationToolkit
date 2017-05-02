@@ -62,6 +62,7 @@ float poemTitleBarX;
 float poemTitleBarY;
 float poemTitleBarWidth;
 float poemTitleBarHeight;
+float poemAppearY;
 
 float poemPausePlayX;
 float poemPausePlayY;
@@ -274,6 +275,7 @@ private void setupUICoordinates() {
   poemTitleBarY = largeAreaY;
   poemTitleBarWidth = poemAreaWidth;
   poemTitleBarHeight = width /32; 
+  poemAppearY = poemAreaY + poemTitleBarY + poemTitleBarHeight;
   poemPausePlayWidthHeight = poemTitleBarHeight * 0.7f;
   poemPausePlayX = poemTitleBarX + (poemPausePlayWidthHeight*0.2f);
   poemPausePlayY = poemTitleBarY + (poemPausePlayWidthHeight*0.2f);
@@ -320,7 +322,7 @@ private void setupUICoordinates() {
   collectedImageWidth = collectedImageHeight;
 }
 
-public void handleMouseClickForPausePlay()
+public void handleMouseClickedForPausePlay()
 {
   if (overRect(imagePausePlayX, imagePausePlayY, imagePausePlayWidthHeight, imagePausePlayWidthHeight)) {
     pauseImages = !pauseImages;
@@ -331,7 +333,7 @@ public void handleMouseClickForPausePlay()
   }
 }
 
-public void handleMouseClickForFFRW()
+public void handleMouseClickedForFFRW()
 {
   if (overRect(wordFFX, wordFFY, wordFFRWWidthHeight, wordFFRWWidthHeight)) {
     wordFallSpeed += 0.1f + (0.1f * wordFallSpeed);

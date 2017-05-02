@@ -98,10 +98,11 @@ public void updateKeywords() {
 }
 
 void mousePressed() {
+  handleMouseClickedForPoem();
   handleMouseClickedForWords();
   handleMouseClickedForImages();
-  handleMouseClickForPausePlay();
-  handleMouseClickForFFRW();
+  handleMouseClickedForPausePlay();
+  handleMouseClickedForFFRW();
 }
 
 void mouseWheel(MouseEvent event) {

@@ -20,6 +20,7 @@ StringList currentPoem = new StringList();
 HashMap<String, Boolean> poemsUsed = new HashMap();
 int index = 0;
 float poemScroll = 0;
+float maxScroll = 0;
 boolean scrollEnabled = false;
 
 PoemList randomPoems;
@@ -30,9 +31,24 @@ JSONArray data;
 private static final String api = "http://poetrydb.org";
 
 public void updatePoemRetrieval() {
-  if (pausePoems || overRect(poemAreaX, poemAreaY, poemAreaWidth, poemAreaHeight)) {
+  if (overRect(poemAreaX, poemAreaY, poemAreaWidth, poemAreaHeight) ||
+      (scrollEnabled && poemScroll < maxScroll) ||
+      pausePoems) {
     return;
-  } else if (index < similarPoems.size() - 1) {
+  } else {
+    println("Changing poem!  Poem scroll: " + poemScroll + " / " + maxScroll);
+    changePoem();
+  }
+}
+
+public void handleMouseClickedForPoem() {
+  if (overRect(0, poemAppearY, poemAreaWidth, poemAreaHeight)) {
+     changePoem(); 
+  }
+}
+
+public void changePoem() {
+  if (index < similarPoems.size() - 1) {
     index++;
     scrollEnabled = false;
     poemScroll = 0;
@@ -91,13 +107,13 @@ void loadPoem()
   for (int i = 1; i < lines.size(); i++) {
       poemLines.append(lines.getString(i));
   }
+  maxScroll = 40 + (15 * poemLines.size()) - poemAreaHeight/2;
 }
 
 void handlePoemScroll(float scrollAmount)
 {
   if (scrollEnabled)
   {
-    float maxScroll = 40 + (15 * poemLines.size()) - poemAreaHeight/2;
     poemScroll += (poemScrollSpeed*2 * scrollAmount);
     poemScroll = max(poemScroll, 0);
     poemScroll = min(poemScroll, maxScroll);
@@ -109,10 +125,8 @@ void drawCollectedPoems() {
   {
     
     int rowGap = 25;
-    float topLimit = poemAreaY + poemTitleBarY + poemTitleBarHeight;
     float poemX = poemAreaX;
-    float poemY = topLimit;
-
+    float poemY = poemAppearY;
 
     if (scrollEnabled && !pausePoems && !overRect(poemAreaX, poemAreaY, poemAreaWidth, poemAreaHeight)) {
       poemScroll += poemScrollSpeed;
@@ -121,7 +135,7 @@ void drawCollectedPoems() {
   
     textAlign(CENTER);
     textSize(20);
-    if (poemY + rowGap > topLimit + 15) {
+    if (poemY + rowGap > poemAppearY + 15) {
       text(title, poemX, poemY, poemAreaWidth, poemAreaHeight);
     }
     rowGap += 15;
@@ -130,7 +144,7 @@ void drawCollectedPoems() {
     for (int i = 1; i < poemLines.size(); i++) {
       rowGap += 15;
 
-      if (poemY + rowGap > topLimit && poemY + rowGap < poemAreaHeight) {
+      if (poemY + rowGap > poemAppearY && poemY + rowGap < poemAreaHeight) {
         text(poemLines.get(i), poemX, poemY + rowGap, poemAreaWidth, poemAreaHeight);
       }
       else if (poemY + rowGap > poemAreaHeight) {

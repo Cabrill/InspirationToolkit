@@ -31,9 +31,12 @@ public void updateWordRetrieval() {
       }
     }
   }
-  String random = getRandomWord();
-  if (!randomWords.hasValue(random)) {
-    randomWords.append(random);
+  for (int i = 0; i < 5; i++)
+  {
+    String random = getRandomWord();
+    if (!randomWords.hasValue(random)) {
+      randomWords.append(random);
+    }
   }
 }
 
@@ -135,7 +138,7 @@ public void updateWordLocations() {
     text(word, onSreenWords.get(word)[0], onSreenWords.get(word)[1]);
     if ((onSreenWords.get(word)[1] + 1) > imageDisappearY) {
       deletable.append(word);
-    } else if (!pauseWords && !overRect(wordAreaX, wordAppearY, wordAreaWidth, wordAreaHeight)) { 
+    } else if (!pauseWords && !overRect(wordAreaX, wordAppearY, wordAreaWidth, imageDisappearY)) { 
       onSreenWords.put(word, new float[]{onSreenWords.get(word)[0], onSreenWords.get(word)[1] + wordFallSpeed});
     }
   }
@@ -161,7 +164,7 @@ public void addRandomWord() {
     if (canDrawWord()) {
       onSreenWords.put(word, new float[]{wordRandomAppearX, wordAppearY});
     }
-  }
+  } 
 }
 
 public boolean canDrawWord() {
