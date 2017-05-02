@@ -24,7 +24,7 @@ String randomKeyword;
 String oppositeKeyword;
 
 int timeSinceLastFetch;
-int wait = 2500;
+int wait = 5000;
 int timeWord;
 int waitWordDraw = 50;
 
@@ -48,7 +48,7 @@ public void draw() {
     }
     if (millis() - timeSinceLastFetch >= wait) {
       println("Fetching data");
-      thread("fetchData");
+      fetchData();
       timeSinceLastFetch = millis();
     }
     
@@ -139,7 +139,7 @@ void keyPressed() {
           updateKeywords();
         }
         
-        thread("fetchData");
+        fetchData();
         timeSinceLastFetch = millis();
         
         hasEnteredStartingWord = true;
@@ -160,13 +160,9 @@ void keyPressed() {
 }
 
 void fetchData() {
-  println("Starting word fetch");
-  updateWordRetrieval();
-  println("Starting image fetch");
-  updateImageRetrieval();
-  println("Starting poem fetch");
-  updatePoemRetrieval();
-  println("Fetch concluded.");
+  thread("updateWordRetrieval");
+  thread("updateImageRetrieval");
+  thread("updatePoemRetrieval");
 }
 
 void drawCollectedWords() {
