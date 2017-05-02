@@ -8,8 +8,13 @@ PImage playImage;
 PImage pauseImage;
 PImage ffImage;
 PImage rwImage;
+PImage addWordImage;
 
 //GUI coordinates
+float addWordX;
+float addWordY;
+float addWordWidthHeight;
+
 float largeAreaHeight;
 float largeAreaY;
 float areaGap;
@@ -115,6 +120,7 @@ public void initializeGUI(){
   pauseImage = loadImage("pause.png");
   ffImage = loadImage("ff.png");
   rwImage = loadImage("rw.png");
+  addWordImage = loadImage("addword.png");
   drawFullUI();
   prerenderedGUI = get(0, 0, width, height);
 }
@@ -194,6 +200,8 @@ public void drawUI() {
   }
   image(rwImage, imageRWX, imageRWY, imageFFRWWidthHeight, imageFFRWWidthHeight);
   tint(255);
+  
+  image(addWordImage, addWordX, addWordY, addWordWidthHeight, addWordWidthHeight); 
 }
 
 public void drawFullUI() {
@@ -320,6 +328,10 @@ private void setupUICoordinates() {
 
   collectedImageHeight = collectedImageAreaWidth / 3;
   collectedImageWidth = collectedImageHeight;
+  
+  addWordWidthHeight = width/20;
+  addWordX = width - (addWordWidthHeight+10);
+  addWordY = height - (addWordWidthHeight+10);
 }
 
 public void handleMouseClickedForPausePlay()
@@ -351,5 +363,13 @@ public void handleMouseClickedForFFRW()
     imageFallSpeed -= 0.1f + (01.f * imageFallSpeed);
     imageFallSpeed = max(imageFallSpeed, imageFallMinSpeed);
     initialImageFallSpeed = imageFallSpeed;
+  }
+}
+
+public void handleMouseClickedForAddWord()
+{
+  if (overRect(addWordX, addWordY, addWordWidthHeight, addWordWidthHeight)) {
+     isEnteringNewWord = true;
+     partiallyEnteredWord = "";
   }
 }

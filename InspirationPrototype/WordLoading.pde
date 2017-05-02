@@ -85,7 +85,12 @@ public StringList getWordsSimilarTo(String word)
 public String getRandomWord() {
   GetRequest get = new GetRequest(randomURL);
   get.send();
-  return get.getContent();
+  
+  String newRandomWord = get.getContent();
+  if (randomKeyword == null && newRandomWord != null) {
+    randomKeyword = newRandomWord;
+  }
+  return newRandomWord;
 }
 
 public StringList getOppositeWords(String word, Boolean tryHard)

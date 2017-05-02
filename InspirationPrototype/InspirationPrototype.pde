@@ -16,6 +16,7 @@ PoemList collectedPoems;
 HashMap<String, float[]> onSreenWords = new HashMap();
 
 Boolean hasEnteredStartingWord;
+Boolean isEnteringNewWord;
 
 //Temporary hard-codedkeywords
 String similarKeyword;
@@ -34,11 +35,12 @@ public void setup() {
   time = millis();
   timeWord = millis();
   hasEnteredStartingWord = false;
+  isEnteringNewWord = false;
 }      
 
 public void draw() {
   drawUI();
-  if (!hasEnteredStartingWord) {
+  if (!hasEnteredStartingWord || isEnteringNewWord) {
     drawPromptForStartWord();
   } else {
     if (millis() - timeWord >= (waitWordDraw/wordFallSpeed)) {
@@ -98,6 +100,7 @@ public void updateKeywords() {
 }
 
 void mousePressed() {
+  handleMouseClickedForAddWord();
   handleMouseClickedForPoem();
   handleMouseClickedForWords();
   handleMouseClickedForImages();
@@ -114,10 +117,10 @@ void mouseWheel(MouseEvent event) {
 }
 
 void keyPressed() {
- if (!hasEnteredStartingWord)
+ if (!hasEnteredStartingWord || isEnteringNewWord)
  {
    // what key was it?   ---
-    if ( (key>='a'&&key<='z') || ( key >= 'A'&&key<='Z')) {
+    if ( (key>='a'&&key<='z') || ( key >= 'A'&&key<='Z') || key == ' ') {
       partiallyEnteredWord+=key; // add this key to our name
     } // Letter 
     else if (key==ENTER||key==RETURN) {
@@ -125,10 +128,13 @@ void keyPressed() {
       {
         similarKeyword = partiallyEnteredWord;
         collectedWords.append(similarKeyword);
-        updateWordRetrieval();
-        updateKeywords();
+        thread("fetchData");
+        thread("getRandomWord");
         initializeImageLoader();
         hasEnteredStartingWord = true;
+        isEnteringNewWord = false;
+      } else if (hasEnteredStartingWord) {
+        isEnteringNewWord = false;
       }
     } // ENTER
     else if (key==BACKSPACE) {
@@ -136,6 +142,9 @@ void keyPressed() {
         partiallyEnteredWord=partiallyEnteredWord.substring(0, partiallyEnteredWord.length()-1);
       }
     } // BACKSPACE
+    else if (key==ESC && hasEnteredStartingWord) {
+      isEnteringNewWord = false;
+    }
  }
 }
 
