@@ -102,7 +102,6 @@ public String getRandomWord() {
   get.send();
   
   String newRandomWord = get.getContent();
-  println("random: " + newRandomWord);
   if (randomKeyword == null && newRandomWord != null) {
     randomKeyword = newRandomWord;
   }
