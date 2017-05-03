@@ -1,7 +1,7 @@
 import http.requests.*;
 static final int MAX_CHOSEN_OBJECTS = 20;
 
-Boolean debugEnabled = true;
+Boolean debugEnabled = false;
 
 public enum KeywordType {
   Similar, Opposite, Random
