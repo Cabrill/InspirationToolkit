@@ -16,7 +16,7 @@ public static StringList randomWords = new StringList();
 public static HashMap<String, StringList>  oppositeWords = new HashMap();
 
 private static final String url = "https://api.datamuse.com/words";
-private static final String randomURL = "http://randomword.setgetgo.com/get.php";
+private static final String randomURL = "http://setgetgo.com/randomword/get.php";
 
 public void updateWordRetrieval() {
   thread("FetchLotsOfRandomWords");
@@ -102,6 +102,7 @@ public String getRandomWord() {
   get.send();
   
   String newRandomWord = get.getContent();
+  println("random: " + newRandomWord);
   if (randomKeyword == null && newRandomWord != null) {
     randomKeyword = newRandomWord;
   }
